@@ -2013,6 +2013,16 @@ def test_snapshot_refuses_to_publish_with_no_mit_devices():
         write_snapshot(Path("/tmp/velox-test-b"), "2026-W33", payload)
 
 
+def test_snapshot_refuses_duplicate_ids():
+    payload = {
+        "fixed_cameras": [{"id": "fx-1"}, {"id": "fx-1"}],
+        "mobile_checks": [], "road_segments": [], "mit_devices": [{"id": 1}],
+        "quarantine": [], "regions": {},
+    }
+    with pytest.raises(PublicationBlocked, match="duplicate ids"):
+        write_snapshot(Path("/tmp/velox-test-c"), "2026-W33", payload)
+
+
 def test_snapshot_writes_files_index_and_latest(tmp_path):
     payload = {
         "fixed_cameras": [{"id": "fx-1", "lat": 45.0, "lon": 9.0}],
@@ -2126,6 +2136,17 @@ def write_snapshot(root: Path, week: str, payload: dict) -> Path:
         if not payload.get(key):
             raise PublicationBlocked(f"refusing to publish: {key} is empty")
 
+    # Duplicate ids break Identifiable lists in the app and would show the same
+    # camera twice on the map. The ordinary-roads PDF really does contain a
+    # duplicated row, so this is a live risk, not a theoretical one.
+    for key in ("fixed_cameras", "mobile_checks", "road_segments"):
+        ids = [row["id"] for row in payload.get(key, []) if "id" in row]
+        if len(ids) != len(set(ids)):
+            duplicates = sorted({i for i in ids if ids.count(i) > 1})
+            raise PublicationBlocked(
+                f"refusing to publish: duplicate ids in {key}: {duplicates[:5]}"
+            )
+
     root = Path(root)
     target = root / week
     if target.exists():
@@ -2195,7 +2216,47 @@ git commit -m "feat: publication gates - zero rows never publishes as an all-cle
 `tests/test_cli.py`:
 
 ```python
-from velox.cli import build_mobile_records, iso_week
+from velox.cli import build_mobile_records, deduplicate_cameras, iso_week
+
+
+def test_deduplicate_collapses_the_same_physical_camera_filed_under_two_regions():
+    # The real ordinary-roads PDF prints this row twice: once unlabelled inside
+    # the Campania block, once under Basilicata.
+    shared = {
+        "network": "ordinaria", "road_name": "Potenza - Melfi", "km_raw": "2+600",
+        "direction_raw": "Nord", "comune": "Potenza", "province": "PZ",
+    }
+    cameras = [
+        {**shared, "region": "Campania", "id": "fx-ordi-Potenza-2600-nord"},
+        {**shared, "region": "Basilicata", "id": "fx-ordi-Potenza-2600-nord"},
+    ]
+    kept, dropped = deduplicate_cameras(cameras)
+    assert dropped == 1
+    assert len(kept) == 1
+
+
+def test_deduplicate_keeps_genuinely_different_cameras_on_the_same_road():
+    base = {"network": "ordinaria", "road_name": "Del Vesuvio", "region": "Campania",
+            "province": "NA"}
+    cameras = [
+        {**base, "km_raw": "11+500", "direction_raw": "Sud", "comune": "Nola", "id": "a"},
+        {**base, "km_raw": "4+190", "direction_raw": "Nord", "comune": "Sant'Anastasia",
+         "id": "b"},
+    ]
+    kept, dropped = deduplicate_cameras(cameras)
+    assert dropped == 0
+    assert len(kept) == 2
+
+
+def test_deduplicate_keeps_both_carriageways_at_the_same_kilometre():
+    base = {"network": "autostrada", "road_name": "Torino – Trieste", "region": "Veneto",
+            "km_raw": "417+900", "comune": "Meolo", "province": "VE"}
+    cameras = [
+        {**base, "direction_raw": "Ovest", "id": "a"},
+        {**base, "direction_raw": "Est", "id": "b"},
+    ]
+    kept, dropped = deduplicate_cameras(cameras)
+    assert dropped == 0, "opposite carriageways are two separate installations"
 
 
 def test_iso_week_formats_as_year_dash_w_week():
@@ -2260,6 +2321,35 @@ CACHE_DIR = Path("cache/segments")
 def iso_week(iso_date: str) -> str:
     year, week, _ = date.fromisoformat(iso_date).isocalendar()
     return f"{year}-W{week:02d}"
+
+
+def deduplicate_cameras(cameras: list[dict]) -> tuple[list[dict], int]:
+    """Collapse records that describe the same physical installation.
+
+    The official ordinary-roads PDF really does print the Potenza-Melfi km 2+600
+    row twice: once unlabelled inside the Campania block and once under
+    Basilicata (verified 2026-08-13, lines 82 and 99 of the extracted text). The
+    parser is right to emit both — it reports what the source says — but two
+    records that geocode to one point would produce two identical pins, two
+    identical alerts, and a duplicate `id`, which breaks SwiftUI's Identifiable
+    lists in the app.
+
+    Identity is the physical installation: network, road, kilometre, direction,
+    comune, province. Region is deliberately NOT part of the key, because the
+    duplicate rows differ only by the region the PDF filed them under.
+    """
+    seen: dict[tuple, dict] = {}
+    dropped = 0
+    for camera in cameras:
+        key = (
+            camera["network"], camera["road_name"], camera["km_raw"],
+            camera["direction_raw"], camera["comune"], camera["province"],
+        )
+        if key in seen:
+            dropped += 1
+            continue
+        seen[key] = camera
+    return list(seen.values()), dropped
 
 
 def build_mobile_records(
@@ -2336,6 +2426,10 @@ def ingest(root: Path) -> int:
         for camera in parsed.cameras:
             cameras.append(geocode(camera, cache_dir=CACHE_DIR))
         print(f"fixed/{network}: {len(parsed.cameras)} cameras", file=sys.stderr)
+
+    cameras, duplicates = deduplicate_cameras(cameras)
+    if duplicates:
+        print(f"collapsed {duplicates} duplicate camera row(s)", file=sys.stderr)
 
     segments: list[dict] = []
     segment_ids: set[str] = set()
