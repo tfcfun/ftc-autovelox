@@ -1,0 +1,62 @@
+name: ingest
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays 06:00 UTC, when the weekly PDFs are republished
+    - cron: "0 7 * * *"   # daily retry, so a Monday failure does not cost a week
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Two runs pushing to the same branch would race on the snapshot commit.
+# Queue them instead, and never cancel one midway: a half-finished ingest that
+# got killed after fetching but before publishing wastes the Overpass budget.
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    # Overpass is slow and rate-limits hard. With the geometry cache committed
+    # this job takes minutes; with a cold cache it can take hours, so cap it
+    # well below the 6-hour job limit rather than burning a whole runner.
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - run: pip install -e ".[dev]"
+
+      # Tests run BEFORE ingest so a parser regression blocks publication
+      # instead of committing bad data.
+      - run: pytest -q
+
+      - run: python -m velox.cli ingest --root data
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "velox-bot"
+          git config user.email "velox-bot@users.noreply.github.com"
+          git add data cache
+          if git diff --staged --quiet; then
+            echo "no change to publish"
+            exit 0
+          fi
+          git commit -m "data: snapshot $(date -u +%Y-%m-%d)"
+          # Another run may have pushed while this one was fetching.
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "push rejected, rebasing (attempt $attempt)"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || exit 1
+          done
+          echo "could not push after 3 attempts"
+          exit 1

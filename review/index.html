@@ -1,0 +1,40 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Velox Italia — verifica coordinate</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  body { font: 15px system-ui, sans-serif; margin: 0; display: flex; height: 100vh; }
+  #list { width: 420px; overflow-y: auto; border-right: 1px solid #cbd5e1; }
+  #map { flex: 1; }
+  .row { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; cursor: pointer; }
+  .row:hover { background: #f1f5f9; }
+  .row.bad { background: #fef2f2; }
+  .meta { color: #334155; font-size: 13px; }
+</style>
+<div id="list"></div>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map').setView([42.5, 12.5], 6);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  { attribution: '© OpenStreetMap' }).addTo(map);
+
+fetch('../data/latest/fixed_cameras.json').then(r => r.json()).then(cameras => {
+  const list = document.getElementById('list');
+  cameras.forEach(camera => {
+    const row = document.createElement('div');
+    row.className = 'row' + (camera.lat == null ? ' bad' : '');
+    row.innerHTML = `<b>${camera.road_name}</b> km ${camera.km_raw}
+      <div class="meta">${camera.comune} (${camera.province}) ·
+      ${camera.direction_raw ?? 'senza direzione'} ·
+      ${camera.geocode_confidence}</div>`;
+    if (camera.lat != null) {
+      const marker = L.marker([camera.lat, camera.lon]).addTo(map)
+        .bindPopup(`${camera.road_name} km ${camera.km_raw}<br>${camera.comune}`);
+      row.onclick = () => { map.setView([camera.lat, camera.lon], 15); marker.openPopup(); };
+    }
+    list.appendChild(row);
+  });
+  document.title += ` — ${cameras.length} postazioni`;
+});
+</script>
