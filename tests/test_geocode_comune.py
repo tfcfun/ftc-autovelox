@@ -2,7 +2,16 @@
 
 import json
 
-from velox.geocode_comune import _build_query, _centroid, _consensus_ref, cache_key, locate
+import re
+
+from velox.geocode_comune import (
+    _build_query,
+    _centroid,
+    _consensus_ref,
+    _name_pattern,
+    cache_key,
+    locate,
+)
 
 # Shape of a real Overpass reply, trimmed: two motorway ways both tagged A4.
 _A4_REPLY = {
@@ -27,8 +36,20 @@ def test_query_selects_motorway_for_autostrada_and_trunk_for_ordinaria():
     assert "motorway" not in ordinary
 
 
-def test_query_escapes_a_quote_in_a_comune_name():
-    assert '\\"' in _build_query('Comune "strano"', "ordinaria")
+def test_query_matches_either_apostrophe_character():
+    """The PDFs use a curly apostrophe, OSM uses a straight one."""
+    for name in ("Quarto d\u2019Altino", "Sant\u2019Anastasia"):
+        pattern = _name_pattern(name)
+        assert "['\u2019\u00b4]" in pattern, pattern
+        assert re.match(pattern, name.replace("\u2019", "'")), "must match the straight form"
+        assert re.match(pattern, name), "must still match the curly form"
+
+
+def test_query_anchors_the_name_so_a_prefix_does_not_match():
+    pattern = _name_pattern("Nola")
+    assert pattern.startswith("^") and pattern.endswith("$")
+    assert re.match(pattern, "Nola")
+    assert not re.match(pattern, "Nolatown")
 
 
 def test_consensus_ref_requires_unanimity():

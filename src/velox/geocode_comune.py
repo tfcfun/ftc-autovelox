@@ -37,12 +37,29 @@ def cache_key(comune: str, province: str, network: str) -> str:
     return f"{safe}_{province}_{network}"
 
 
+def _name_pattern(comune: str) -> str:
+    """An anchored regex matching the comune name whatever apostrophe it uses.
+
+    The PDFs print a curly apostrophe (U+2019) - "Quarto d'Altino",
+    "Sant'Anastasia" - while OSM overwhelmingly uses the straight one. An exact
+    ["name"="..."] match therefore returns nothing for every such comune, which
+    is a silent miss rather than an error. Verified 2026-08-13: Quarto d'Altino
+    found nothing on exact match.
+    """
+    escaped = re.escape(comune)
+    # re.escape may or may not escape these depending on version; handle both.
+    for variant in ("\\’", "’", "\\'", "'", "\\´", "´"):
+        escaped = escaped.replace(variant, "APOSTROPHE")
+    escaped = escaped.replace("APOSTROPHE", "['’´]")
+    return f"^{escaped}$"
+
+
 def _build_query(comune: str, network: str) -> str:
     classes = "|".join(_HIGHWAY_CLASSES.get(network, ["trunk", "primary"]))
-    escaped = comune.replace('"', '\\"')
+    pattern = _name_pattern(comune).replace('"', '\\"')
     return (
         "[out:json][timeout:90];"
-        f'area["boundary"="administrative"]["admin_level"="8"]["name"="{escaped}"]->.c;'
+        f'area["boundary"="administrative"]["admin_level"="8"]["name"~"{pattern}",i]->.c;'
         f'(way["highway"~"^({classes})$"](area.c););'
         "out geom;"
     )
