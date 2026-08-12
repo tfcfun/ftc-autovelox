@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from velox.geocode_comune import locate as locate_by_comune
 from velox.overpass import _haversine_m, query_road_geometry
 from velox.parse_fixed import FixedCamera
 
@@ -69,18 +70,24 @@ def geocode(camera: FixedCamera, *, cache_dir: Path, ref_override: str | None = 
         "verified": False,
     }
 
-    if not resolved_ref or camera.km is None:
+    if resolved_ref and camera.km is not None:
+        geometry = query_road_geometry(resolved_ref, camera.province, cache_dir=cache_dir)
+        point = point_at_km(geometry, camera.km) if geometry else None
+        if point is not None:
+            record["lon"], record["lat"] = point[0], point[1]
+            record["geocode_method"] = "overpass_interpolated"
+            record["geocode_confidence"] = "medium"
+            return record
+
+    # No usable reference: the PDFs name roads descriptively. Fall back to the
+    # comune, which yields both the reference and a point on the right road.
+    # Deliberately low confidence - good enough to review, never to alert on.
+    located = locate_by_comune(camera.comune, camera.province, camera.network)
+    if located is None:
         return record
 
-    geometry = query_road_geometry(resolved_ref, camera.province, cache_dir=cache_dir)
-    if not geometry:
-        return record
-
-    point = point_at_km(geometry, camera.km)
-    if point is None:
-        return record
-
-    record["lon"], record["lat"] = point[0], point[1]
-    record["geocode_method"] = "overpass_interpolated"
-    record["geocode_confidence"] = "medium"
+    record["road_ref"] = record["road_ref"] or located["ref"]
+    record["lon"], record["lat"] = located["lon"], located["lat"]
+    record["geocode_method"] = "comune_road_centroid"
+    record["geocode_confidence"] = "low"
     return record

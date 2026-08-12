@@ -19,7 +19,6 @@ from velox.overpass import cache_key, query_road_geometry
 from velox.parse_fixed import parse_fixed
 from velox.parse_mobile import MobileCheck, parse_mobile, pdf_to_text
 from velox.publish import decide_region_status, region_statuses_to_dict, write_snapshot
-from velox.road_names import load_cache, resolve_ref, save_cache
 from velox.sources import resolve_sources
 
 SOURCE_PAGE = "https://www.poliziadistato.it/articolo/autovelox-e-tutor-dove-sono"
@@ -127,7 +126,6 @@ def ingest(root: Path) -> int:
               f"{len(parsed.quarantine)} quarantined", file=sys.stderr)
 
     cameras: list[dict] = []
-    name_cache = load_cache()
     for network, url in (("autostrada", links.fixed_auto), ("ordinaria", links.fixed_ord)):
         document = fetch(url)
         parsed = parse_fixed(network, pdf_to_text(document.content))
@@ -136,13 +134,7 @@ def ingest(root: Path) -> int:
         # Resolve each denomination to an OSM ref before geocoding, or the whole
         # precise layer of the map stays empty.
         for camera in parsed.cameras:
-            override = None
-            if not camera.road_ref:
-                override = resolve_ref(camera.road_name, cache=name_cache)
-            cameras.append(
-                geocode(camera, cache_dir=CACHE_DIR, ref_override=override)
-            )
-        save_cache(name_cache)
+            cameras.append(geocode(camera, cache_dir=CACHE_DIR))
         print(f"fixed/{network}: {len(parsed.cameras)} cameras", file=sys.stderr)
 
     cameras, duplicates = deduplicate_cameras(cameras)
