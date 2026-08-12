@@ -1640,7 +1640,18 @@ def cache_key(road_ref: str, province: str) -> str:
 
 
 def _build_query(road_ref: str, province: str) -> str:
-    """Match OSM `ref` spellings ("SS 9", "SS9") inside the province boundary."""
+    """Match OSM `ref` spellings ("SS 9", "SS9") inside the province boundary.
+
+    Province selection uses an EXACT ISO3166-2 match. This was verified against the
+    live API on 2026-08-13: the Provincia di Lodi relation carries
+    ISO3166-2="IT-LO", short_name="LO", ref:ISTAT="098" and NO `ref` tag.
+
+    Do not use a regex such as ["ISO3166-2"~"^IT-"] with additional tag filters:
+    it forces a scan over every area and returns HTTP 504. The exact match is
+    indexed and completes in 7-12 s (measured: SS9/LO 248 ways 7.5 s,
+    A7/PV 73 ways 8.2 s, A4/VE 168 ways 12.4 s).
+    Selecting by ["ref"="LO"] does NOT work - it returns zero ways.
+    """
     prefix = re.match(r"^([A-Z]+)(\d+)$", road_ref)
     if not prefix:
         alternatives = re.escape(road_ref)
@@ -1649,7 +1660,7 @@ def _build_query(road_ref: str, province: str) -> str:
         alternatives = f"{letters}\\\\s*{number}"
     return f"""
 [out:json][timeout:90];
-area["ISO3166-2"~"^IT-"]["ref:ISTAT"]["short_name"="{province}"]->.prov;
+area["ISO3166-2"="IT-{province}"]["admin_level"="6"]->.prov;
 (
   way["highway"]["ref"~"^{alternatives}$"](area.prov);
 );
@@ -1657,13 +1668,28 @@ out geom;
 """.strip()
 
 
-def _default_client(query: str) -> dict:
-    response = requests.post(
-        ENDPOINT, data={"data": query}, timeout=120,
-        headers={"User-Agent": "velox-italia/0.1"},
-    )
-    response.raise_for_status()
-    return response.json()
+def _default_client(query: str, *, tries: int = 5) -> dict:
+    """Overpass rate-limits hard. Observed on 2026-08-13: four queries in quick
+    succession returned HTTP 429, and a slow query returned 504. Both are
+    transient and must be backed off, not treated as "this road has no geometry" —
+    caching an empty result would permanently blind the app to that road."""
+    last: Exception | None = None
+    for attempt in range(tries):
+        try:
+            response = requests.post(
+                ENDPOINT, data={"data": query}, timeout=180,
+                headers={"User-Agent": "velox-italia/0.1"},
+            )
+            if response.status_code in (429, 504):
+                raise requests.HTTPError(f"transient {response.status_code}")
+            response.raise_for_status()
+            return response.json()
+        except Exception as exc:  # noqa: BLE001 - retried, re-raised below
+            last = exc
+            if attempt < tries - 1:
+                time.sleep(25 * (attempt + 1))
+    assert last is not None
+    raise last
 
 
 def _haversine_m(a: list[float], b: list[float]) -> float:
@@ -1751,9 +1777,10 @@ print('points:', len(g) if g else None)
 "
 ```
 
-Expected: a non-zero point count. If it returns `None`, the area selector is wrong — adjust
-`_build_query` to select the province by `admin_level=6` boundary name instead of `short_name`,
-and re-run until real geometry comes back.
+Expected: a non-zero point count — this exact query was verified live on 2026-08-13 and returns
+248 ways for SS9 in Lodi. If it returns `None`, do **not** start rewriting the selector: first
+check whether you are being rate-limited (HTTP 429) or timed out (504), which is by far the more
+likely cause and is handled by the backoff in `_default_client`. Space out your manual probes.
 
 - [ ] **Step 6: Commit**
 
