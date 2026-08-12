@@ -1,0 +1,12 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-08-13T06:00:00Z",
+ "week": "2026-W33",
+ "files": {},
+ "regions": {
+  "Lombardia": {"status": "ok", "updated_at": "2026-08-13T06:00:00Z", "rows": 3, "quarantined": 0},
+  "Sicilia": {"status": "stale", "updated_at": "2026-08-06T06:00:00Z", "rows": 5, "quarantined": 0}
+ },
+ "sources": {},
+ "quarantine_count": 0
+}

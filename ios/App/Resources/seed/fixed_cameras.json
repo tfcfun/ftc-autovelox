@@ -1,0 +1,12 @@
+[
+ {"id": "fx-auto-A4-423850-ovest", "network": "autostrada", "region": "Veneto",
+  "road_name": "Torino – Trieste", "road_ref": "A4", "km_raw": "423+850", "km": 423.85,
+  "direction_raw": "Ovest", "bearing_deg": 270, "comune": "Noventa di Piave",
+  "province": "VE", "lat": 45.6612, "lon": 12.5341,
+  "geocode_method": "overpass_interpolated", "geocode_confidence": "medium", "verified": false},
+ {"id": "fx-auto-A1-305500-nord", "network": "autostrada", "region": "Toscana",
+  "road_name": "Milano – Napoli", "road_ref": "A1", "km_raw": "305+500", "km": 305.5,
+  "direction_raw": "Nord", "bearing_deg": 0, "comune": "Bagno a Ripoli",
+  "province": "FI", "lat": null, "lon": null,
+  "geocode_method": "none", "geocode_confidence": "none", "verified": false}
+]

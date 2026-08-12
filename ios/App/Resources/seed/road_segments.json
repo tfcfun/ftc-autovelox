@@ -1,0 +1,5 @@
+[
+ {"id": "seg-SS9-LO", "road_ref": "SS9", "province": "LO",
+  "geometry": [[9.500, 45.300], [9.520, 45.305], [9.540, 45.310]],
+  "source": "overpass", "fetched_at": "2026-08-13T06:00:00Z"}
+]

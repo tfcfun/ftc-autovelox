@@ -7,6 +7,8 @@ struct VeloxApp: App {
     @State private var selection: String =
         UserDefaults.standard.string(forKey: "velox.tab") ?? "route"
 
+    @State private var snapshotProvider = SnapshotProvider()
+
     var body: some Scene {
         WindowGroup {
             TabView(selection: $selection) {
@@ -22,6 +24,11 @@ struct VeloxApp: App {
                 InfoView()
                     .tabItem { Label("Info", systemImage: "info.circle") }
                     .tag("info")
+            }
+            .environment(snapshotProvider)
+            .task {
+                snapshotProvider.loadCached()
+                await snapshotProvider.refresh()
             }
         }
     }

@@ -12,6 +12,11 @@ targets:
     platform: iOS
     sources:
       - path: App
+        excludes:
+          - Resources
+      - path: App/Resources/seed
+        type: folder
+        buildPhase: resources
     dependencies:
       - package: VeloxKit
     info:

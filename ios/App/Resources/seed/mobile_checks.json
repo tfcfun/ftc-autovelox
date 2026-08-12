@@ -1,0 +1,8 @@
+[
+ {"id": "mb-2026W33-LO-SS9-2026-08-14", "date": "2026-08-14", "week": "2026-W33",
+  "region": "Lombardia", "road_type": "Strada Statale", "road_ref": "SS9",
+  "road_name": "via Emilia", "province": "LO", "segment_id": "seg-SS9-LO"},
+ {"id": "mb-2026W33-PV-A7-2026-08-15", "date": "2026-08-15", "week": "2026-W33",
+  "region": "Lombardia", "road_type": "Autostrada", "road_ref": "A7",
+  "road_name": "Milano-Genova", "province": "PV", "segment_id": null}
+]
