@@ -1,0 +1,10 @@
+[
+ {"id": 2, "ente": "Servizio Intercomunale P.L. \"Colline Moreniche del Garda\"",
+  "codice_accertatore": "CMBSP252", "codice_catastale": "B436", "tipo_raw": "Mobile",
+  "tipo": "mobile", "marca": "Elltraff", "modello": "Telelaser", "versione": "Trucam HD",
+  "matricola": "TC010198", "n_decreto": "3248", "data_decreto": "2011-06-13", "note": ""},
+ {"id": 3, "ente": "Comune di Bari", "codice_accertatore": "BAPL001",
+  "codice_catastale": "A662", "tipo_raw": "FISSO", "tipo": "fisso", "marca": "Autovelox",
+  "modello": "106", "versione": "", "matricola": "AV900123", "n_decreto": "1505",
+  "data_decreto": "2000-03-20", "note": ""}
+]
