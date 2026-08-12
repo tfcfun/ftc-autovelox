@@ -34,10 +34,18 @@ def point_at_km(geometry: list[list[float]], km: float) -> list[float] | None:
     return None
 
 
-def geocode(camera: FixedCamera, *, cache_dir: Path) -> dict:
+def geocode(camera: FixedCamera, *, cache_dir: Path, ref_override: str | None = None) -> dict:
+    """Place one camera.
+
+    `ref_override` carries a road reference resolved from the PDF's descriptive
+    denomination (see velox.road_names). The fixed-installation PDFs print
+    "Milano - Napoli", never "A1", so without this every fixed camera would keep
+    null coordinates and the precise layer of the map would be empty.
+    """
+    resolved_ref = camera.road_ref or ref_override
     identifier = "-".join(
         [
-            "fx", camera.network[:4], (camera.road_ref or camera.comune or "x"),
+            "fx", camera.network[:4], (resolved_ref or camera.comune or "x"),
             camera.km_raw.replace("+", "").replace(",", ""),
             (camera.direction_raw or "na").lower(),
         ]
@@ -47,7 +55,7 @@ def geocode(camera: FixedCamera, *, cache_dir: Path) -> dict:
         "network": camera.network,
         "region": camera.region,
         "road_name": camera.road_name,
-        "road_ref": camera.road_ref,
+        "road_ref": resolved_ref,
         "km_raw": camera.km_raw,
         "km": camera.km,
         "direction_raw": camera.direction_raw,
@@ -61,10 +69,10 @@ def geocode(camera: FixedCamera, *, cache_dir: Path) -> dict:
         "verified": False,
     }
 
-    if not camera.road_ref or camera.km is None:
+    if not resolved_ref or camera.km is None:
         return record
 
-    geometry = query_road_geometry(camera.road_ref, camera.province, cache_dir=cache_dir)
+    geometry = query_road_geometry(resolved_ref, camera.province, cache_dir=cache_dir)
     if not geometry:
         return record
 
