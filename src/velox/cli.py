@@ -7,13 +7,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
 
 from velox.constants import REGIONS
 from velox.fetch import fetch, utc_now
-from velox.geocode_fixed import geocode
+from velox.geocode_fixed import geocode, geocode_stub
 from velox.mit import fetch_devices
 from velox.overpass import cache_key, query_road_geometry
 from velox.parse_fixed import parse_fixed
@@ -59,16 +60,35 @@ def deduplicate_cameras(cameras: list[dict]) -> tuple[list[dict], int]:
     return list(seen.values()), dropped
 
 
+def _road_slug(check: MobileCheck) -> str:
+    """A stable, filesystem-safe token identifying the road of a check.
+
+    Falls back to the descriptive name when no reference parsed. Two checks in
+    one province on one day with no reference and no name would otherwise share
+    an id - which is exactly what happened in Reggio Emilia on 2026-08-12.
+    """
+    source = check.road_ref or check.road_name or "NA"
+    slug = re.sub(r"[^A-Za-z0-9]", "", source)[:16]
+    return slug or "NA"
+
+
 def build_mobile_records(
     checks: list[MobileCheck], *, week: str, segment_ids: set[str]
 ) -> list[dict]:
     records = []
+    used: dict[str, int] = {}
     for check in checks:
         key = cache_key(check.road_ref, check.province) if check.road_ref else None
+        base = (f"mb-{week.replace('-', '')}-{check.province}-"
+                f"{_road_slug(check)}-{check.date}")
+        # Last-resort de-collision. Two genuinely identical rows can appear in one
+        # regional PDF; they still need distinct ids or the app's list breaks.
+        # An ordinal suffix is used rather than '#', which reads as a fragment.
+        used[base] = used.get(base, 0) + 1
+        identifier = base if used[base] == 1 else f"{base}-{used[base]}"
         records.append(
             {
-                "id": f"mb-{week.replace('-', '')}-{check.province}-"
-                      f"{check.road_ref or 'NA'}-{check.date}",
+                "id": identifier,
                 "date": check.date,
                 "week": week,
                 "region": check.region,
@@ -134,7 +154,14 @@ def ingest(root: Path) -> int:
         # Resolve each denomination to an OSM ref before geocoding, or the whole
         # precise layer of the map stays empty.
         for camera in parsed.cameras:
-            cameras.append(geocode(camera, cache_dir=CACHE_DIR))
+            # One unlucky road must not sink the whole weekly run. A camera that
+            # cannot be geocoded is still published, simply without coordinates.
+            try:
+                cameras.append(geocode(camera, cache_dir=CACHE_DIR))
+            except Exception as exc:  # noqa: BLE001 - degrade, do not abort
+                print(f"geocode failed for {camera.comune} {camera.province}: {exc}",
+                      file=sys.stderr)
+                cameras.append(geocode_stub(camera))
         print(f"fixed/{network}: {len(parsed.cameras)} cameras", file=sys.stderr)
 
     cameras, duplicates = deduplicate_cameras(cameras)
@@ -145,7 +172,11 @@ def ingest(root: Path) -> int:
     segment_ids: set[str] = set()
     pairs = {(c.road_ref, c.province) for c in all_checks if c.road_ref}
     for ref, province in sorted(pairs):
-        geometry = query_road_geometry(ref, province, cache_dir=CACHE_DIR)
+        try:
+            geometry = query_road_geometry(ref, province, cache_dir=CACHE_DIR)
+        except Exception as exc:  # noqa: BLE001 - degrade, do not abort
+            print(f"geometry lookup failed for {ref} {province}: {exc}", file=sys.stderr)
+            geometry = None
         if not geometry:
             print(f"no geometry for {ref} {province}", file=sys.stderr)
             continue

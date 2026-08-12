@@ -91,3 +91,26 @@ def geocode(camera: FixedCamera, *, cache_dir: Path, ref_override: str | None = 
     record["geocode_method"] = "comune_road_centroid"
     record["geocode_confidence"] = "low"
     return record
+
+
+def geocode_stub(camera: FixedCamera) -> dict:
+    """The record a camera gets when geocoding failed outright.
+
+    Published deliberately: the installation is real and belongs in the region
+    browse even when it cannot be placed. Null coordinates keep it off the map
+    and out of proximity alerts.
+    """
+    return {
+        "id": "-".join([
+            "fx", camera.network[:4], (camera.road_ref or camera.comune or "x"),
+            camera.km_raw.replace("+", "").replace(",", ""),
+            (camera.direction_raw or "na").lower(),
+        ]),
+        "network": camera.network, "region": camera.region,
+        "road_name": camera.road_name, "road_ref": camera.road_ref,
+        "km_raw": camera.km_raw, "km": camera.km,
+        "direction_raw": camera.direction_raw, "bearing_deg": camera.bearing_deg,
+        "comune": camera.comune, "province": camera.province,
+        "lat": None, "lon": None,
+        "geocode_method": "failed", "geocode_confidence": "none", "verified": False,
+    }
