@@ -95,3 +95,18 @@ public extension Copy {
         sui controlli di velocità, così non devi cercarle sul sito.
         """
 }
+
+public extension Copy {
+    /// Shown when the data is current. States the publication date and nothing more.
+    static func dataAsOf(publishedAt: String) -> String {
+        "Dati della Polizia Stradale aggiornati al \(publishedAt)."
+    }
+
+    /// Shown when a refresh failed AND the data on screen has gone stale.
+    ///
+    /// The date is the point of the message: "update failed" alone tells the user
+    /// nothing about whether to trust what they are looking at.
+    static func refreshFailed(publishedAt: String) -> String {
+        "Aggiornamento non riuscito. Stai vedendo i dati pubblicati il \(publishedAt)."
+    }
+}

@@ -17,6 +17,8 @@ final class CopyTests: XCTestCase {
             Copy.mitNoMatch,
             Copy.stretchEntryAlert(road: "A4"),
             Copy.appPurpose,
+            Copy.dataAsOf(publishedAt: "13/08/2026"),
+            Copy.refreshFailed(publishedAt: "13/08/2026"),
         ]
     }
 
@@ -46,5 +48,14 @@ final class CopyTests: XCTestCase {
         let text = Copy.fixedCameraAlert(metres: 800)
         XCTAssertTrue(text.contains("800"))
         XCTAssertTrue(text.lowercased().contains("limite"))
+    }
+}
+
+extension CopyTests {
+    /// A freshness message without a date tells the user nothing about whether
+    /// to trust the screen.
+    func testFreshnessMessagesAlwaysCarryTheDate() {
+        XCTAssertTrue(Copy.dataAsOf(publishedAt: "13/08/2026").contains("13/08/2026"))
+        XCTAssertTrue(Copy.refreshFailed(publishedAt: "13/08/2026").contains("13/08/2026"))
     }
 }

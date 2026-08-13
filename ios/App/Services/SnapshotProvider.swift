@@ -12,6 +12,7 @@ import VeloxKit
 final class SnapshotProvider {
     private(set) var snapshot: Snapshot?
     private(set) var errorMessage: String?
+    private(set) var didRefreshFail = false
 
     private let remoteBase = URL(string:
         "https://tfcfun.github.io/velox-italia/data/latest/")!
@@ -23,6 +24,26 @@ final class SnapshotProvider {
     }
 
     var stalenessDays: Int? { snapshot?.index.ageInDays() }
+
+    /// Whether what the user is looking at is still good, regardless of whether
+    /// the last refresh attempt succeeded.
+    var isDataCurrent: Bool {
+        guard let days = stalenessDays else { return snapshot != nil }
+        return days <= 8
+    }
+
+    /// The one line the user sees about data freshness.
+    ///
+    /// Always carries the publication date, because that is what actually tells
+    /// them whether to trust the screen. A failed refresh over current data is a
+    /// statement of fact, not a warning.
+    var freshnessNote: String? {
+        guard snapshot != nil else { return nil }
+        if didRefreshFail && !isDataCurrent {
+            return Copy.refreshFailed(publishedAt: publishedAtDisplay)
+        }
+        return Copy.dataAsOf(publishedAt: publishedAtDisplay)
+    }
 
     /// The snapshot's publication date, formatted dd/MM/yyyy for display.
     var publishedAtDisplay: String {
@@ -72,9 +93,13 @@ final class SnapshotProvider {
             try FileManager.default.moveItem(at: staging, to: cacheDirectory)
             snapshot = candidate
             errorMessage = nil
+            didRefreshFail = false
         } catch {
-            errorMessage = "Aggiornamento non riuscito."
-            // The previously loaded snapshot is retained deliberately.
+            // The previously loaded snapshot is retained deliberately, and a
+            // failed refresh is only worth mentioning when the data the user is
+            // actually looking at has gone stale. Saying "update failed" while
+            // showing a current week reads as breakage when nothing is broken.
+            didRefreshFail = true
         }
     }
 }

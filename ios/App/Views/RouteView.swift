@@ -29,6 +29,7 @@ struct RouteView: View {
     /// Debug-only: set by the `-velox.demoTrip` launch argument so trip mode can
     /// be exercised in the simulator without typing addresses. Not user-reachable.
     @State private var demoTripResult: RouteResult?
+    @State private var currentPlace = CurrentPlace()
 
     var body: some View {
         NavigationStack {
@@ -36,6 +37,21 @@ struct RouteView: View {
                 Section("Percorso") {
                     TextField("Partenza", text: $origin)
                         .textInputAutocapitalization(.words)
+                    // Explicit tap only. The app never reaches for the GPS by itself.
+                    Button {
+                        Task { await useCurrentPosition() }
+                    } label: {
+                        HStack(spacing: 6) {
+                            if currentPlace.isResolving {
+                                ProgressView().controlSize(.small)
+                            } else {
+                                Image(systemName: "location.fill")
+                            }
+                            Text("Usa la mia posizione")
+                        }
+                        .font(.callout)
+                    }
+                    .disabled(currentPlace.isResolving)
                     TextField("Arrivo", text: $destination)
                         .textInputAutocapitalization(.words)
                     DatePicker("Giorno", selection: $date, in: dateRange,
@@ -60,9 +76,9 @@ struct RouteView: View {
                         Text(errorText).foregroundStyle(.red).font(.callout)
                     }
                 }
-                if let message = provider.errorMessage {
+                if let note = provider.freshnessNote {
                     Section {
-                        Text(message).font(.footnote).foregroundStyle(.secondary)
+                        Text(note).font(.footnote).foregroundStyle(.secondary)
                     }
                 }
             }
@@ -120,6 +136,20 @@ struct RouteView: View {
         let components = DateComponents(weekOfYear: weekOfYear, yearForWeekOfYear: year)
         guard let start = calendar.date(from: components) else { return nil }
         return start...start.addingTimeInterval(7 * 86_400 - 1)
+    }
+
+    /// Fill Partenza from the device's current position.
+    ///
+    /// Resolves to a place name rather than raw coordinates so the user can see
+    /// what the app thinks it found, and type over it if it guessed the wrong town.
+    private func useCurrentPosition() async {
+        errorText = nil
+        do {
+            origin = try await currentPlace.resolveName()
+        } catch {
+            errorText = (error as? LocalizedError)?.errorDescription
+                ?? "Posizione non disponibile."
+        }
     }
 
     private func calculate() async {
