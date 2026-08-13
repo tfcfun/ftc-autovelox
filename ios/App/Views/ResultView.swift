@@ -6,6 +6,8 @@ struct ResultView: View {
     @Environment(SnapshotProvider.self) private var provider
     let result: RouteResult
 
+    @State private var isTripPresented = false
+
     var body: some View {
         VStack(spacing: 0) {
             if let days = provider.stalenessDays, days > 8 {
@@ -32,6 +34,22 @@ struct ResultView: View {
                 }
                 .listStyle(.plain)
             }
+
+            // Trip mode is off by default and armed only by this explicit tap.
+            Button {
+                isTripPresented = true
+            } label: {
+                Label("Modalità viaggio", systemImage: "location.fill")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+            }
+            .buttonStyle(.borderedProminent)
+            .padding([.horizontal, .bottom], 16)
+            .padding(.top, 8)
+        }
+        .fullScreenCover(isPresented: $isTripPresented) {
+            TripView(result: result)
         }
         .navigationTitle("Risultato")
         .navigationBarTitleDisplayMode(.inline)

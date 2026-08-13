@@ -4,7 +4,7 @@ import CoreLocation
 import VeloxKit
 
 /// The output of one route calculation, pushed to `ResultView`.
-struct RouteResult: Hashable {
+struct RouteResult: Hashable, Identifiable {
     let id = UUID()
     let routeCoordinates: [CLLocationCoordinate2D]
     let route: [Coordinate]
@@ -26,6 +26,9 @@ struct RouteView: View {
     @State private var isCalculating = false
     @State private var errorText: String?
     @State private var result: RouteResult?
+    /// Debug-only: set by the `-velox.demoTrip` launch argument so trip mode can
+    /// be exercised in the simulator without typing addresses. Not user-reachable.
+    @State private var demoTripResult: RouteResult?
 
     var body: some View {
         NavigationStack {
@@ -67,7 +70,35 @@ struct RouteView: View {
             .navigationDestination(item: $result) { result in
                 ResultView(result: result)
             }
+            .fullScreenCover(item: $demoTripResult) { demo in
+                TripView(result: demo)
+            }
+            .task { await presentDemoTripIfRequested() }
         }
+    }
+
+    /// Debug-only trip along the seed SS9 segment, driven by `simctl location`.
+    private func presentDemoTripIfRequested() async {
+        guard UserDefaults.standard.bool(forKey: "velox.demoTrip") else { return }
+        while provider.snapshot == nil {
+            try? await Task.sleep(for: .milliseconds(100))
+        }
+        guard let snapshot = provider.snapshot,
+              let segment = snapshot.roadSegments.first else { return }
+        let route = segment.coordinates
+        let findings = RouteMatcher.findings(
+            route: route, snapshot: snapshot, date: "2026-08-14")
+        demoTripResult = RouteResult(
+            routeCoordinates: route.map {
+                CLLocationCoordinate2D(latitude: $0.lat, longitude: $0.lon)
+            },
+            route: route,
+            findings: findings,
+            destinationName: "Demo",
+            destinationCoordinate: CLLocationCoordinate2D(
+                latitude: route.last?.lat ?? 0, longitude: route.last?.lon ?? 0),
+            dateLabel: "venerdì 14/08/26"
+        )
     }
 
     /// The selectable days: the published snapshot week when known.
