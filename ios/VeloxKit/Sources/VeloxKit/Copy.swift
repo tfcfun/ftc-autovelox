@@ -76,3 +76,14 @@ public extension Copy {
         trascritti dal verbale, l'ente potrebbe averlo registrato diversamente.
         """
 }
+
+public extension Copy {
+    /// Entering a stretch where a fixed installation is known to be.
+    ///
+    /// Deliberately states no distance. The sources do not say where along the
+    /// stretch the camera stands, and inventing "tra 800 metri" would be a
+    /// number we made up.
+    static func stretchEntryAlert(road: String) -> String {
+        "Tratto con controllo velocità su \(road) — rispetta il limite."
+    }
+}

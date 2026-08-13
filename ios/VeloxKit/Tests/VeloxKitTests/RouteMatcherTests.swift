@@ -66,3 +66,60 @@ final class RouteMatcherTests: XCTestCase {
         XCTAssertTrue(findings.isEmpty)
     }
 }
+
+// MARK: - Stretch-located cameras
+
+extension RouteMatcherTests {
+    private func stretchCamera(along stretch: [[Double]]) -> FixedCamera {
+        FixedCamera(
+            id: "fx-stretch", network: "autostrada", region: "Veneto",
+            roadName: "Torino – Trieste", roadRef: "A4", kmRaw: "423+850", km: 423.85,
+            directionRaw: "Ovest", bearingDeg: 270, comune: "Noventa di Piave",
+            province: "VE", lat: 45.60, lon: 12.470,
+            geocodeConfidence: "low", verified: false, uncertaintyWays: [stretch]
+        )
+    }
+
+    /// A camera known only as a stretch must be found when the route touches ANY
+    /// part of it - including when the stretch's centre, which is all the old
+    /// point logic had, sits far outside the corridor.
+    func testRouteTouchingOnlyTheStretchEndFindsTheCamera() {
+        // ~11 km of road running east; its centre is ~5 km from either end.
+        let stretch = (0...20).map { [12.40 + Double($0) * 0.007, 45.60] }
+        // The route overlaps only the western tip.
+        let route = [Coordinate(lat: 45.60, lon: 12.400),
+                     Coordinate(lat: 45.60, lon: 12.410)]
+        let snapshot = Snapshot(
+            index: try! SnapshotIndex.decode(from: Data(#"""
+            {"schema_version":1,"generated_at":"2026-08-13T06:00:00Z","week":"2026-W33",
+             "regions":{},"quarantine_count":0}
+            """#.utf8)),
+            fixedCameras: [stretchCamera(along: stretch)],
+            mobileChecks: [], roadSegments: [], mitDevices: []
+        )
+        // Guard the guard: the framing centre must be OUTSIDE the point corridor,
+        // or this test would pass on the old logic and prove nothing.
+        let centre = Coordinate(lat: 45.60, lon: 12.470)
+        XCTAssertGreaterThan(Geo.distanceToPolyline(centre, polyline: route), 500)
+
+        let findings = RouteMatcher.findings(route: route, snapshot: snapshot,
+                                             date: "2026-08-13")
+        XCTAssertEqual(findings.count, 1, "the stretch touches the route")
+    }
+
+    func testARouteFarFromTheStretchFindsNothing() {
+        let stretch = [[12.5280, 45.6690], [12.5342, 45.6738]]
+        // Palermo.
+        let route = [Coordinate(lat: 38.11, lon: 13.36), Coordinate(lat: 38.12, lon: 13.37)]
+        let snapshot = Snapshot(
+            index: try! SnapshotIndex.decode(from: Data(#"""
+            {"schema_version":1,"generated_at":"2026-08-13T06:00:00Z","week":"2026-W33",
+             "regions":{},"quarantine_count":0}
+            """#.utf8)),
+            fixedCameras: [stretchCamera(along: stretch)],
+            mobileChecks: [], roadSegments: [], mitDevices: []
+        )
+        XCTAssertTrue(RouteMatcher.findings(route: route, snapshot: snapshot,
+                                            date: "2026-08-13").isEmpty)
+    }
+}

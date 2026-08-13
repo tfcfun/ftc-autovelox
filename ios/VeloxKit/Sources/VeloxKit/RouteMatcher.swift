@@ -34,6 +34,24 @@ public enum RouteMatcher {
         var results: [Finding] = []
 
         for camera in snapshot.fixedCameras {
+            let stretches = camera.uncertaintyStretches
+            if !stretches.isEmpty {
+                // Known only as a stretch. Match if the route touches ANY of it -
+                // the camera could be anywhere along it, so testing the middle
+                // would miss a route that clips one end.
+                let touching = stretches.filter {
+                    Geo.polylinesIntersect(route, $0, toleranceMetres: segmentToleranceMetres)
+                }
+                guard !touching.isEmpty else { continue }
+                let entry = touching
+                    .flatMap { $0 }
+                    .filter { Geo.distanceToPolyline($0, polyline: route) <= segmentToleranceMetres }
+                    .map { Geo.alongTrackDistance($0, polyline: route) }
+                    .min() ?? 0
+                results.append(.fixed(camera, alongTrackMetres: entry))
+                continue
+            }
+
             guard let coordinate = camera.coordinate else { continue }
             let offset = Geo.distanceToPolyline(coordinate, polyline: route)
             guard offset <= fixedCorridorMetres else { continue }

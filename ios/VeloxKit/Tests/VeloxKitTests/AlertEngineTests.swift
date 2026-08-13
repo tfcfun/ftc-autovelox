@@ -181,3 +181,58 @@ extension AlertEngineTests {
                        "a scheduled road is not a placed point and is unaffected")
     }
 }
+
+// MARK: - Stretch entry
+
+extension AlertEngineTests {
+    private func stretchCamera(_ stretch: [[Double]]) -> FixedCamera {
+        FixedCamera(
+            id: "fx-stretch", network: "autostrada", region: "Lombardia",
+            roadName: "Torino – Trieste", roadRef: "A4", kmRaw: "423+850", km: 423.85,
+            directionRaw: nil, bearingDeg: nil, comune: "Test", province: "LO",
+            lat: 45.0, lon: 9.05, geocodeConfidence: "low", verified: false,
+            uncertaintyWays: [stretch]
+        )
+    }
+
+    /// A stretch is a real, detectable event: you either are on it or you are not.
+    /// It warrants a one-shot warning on entry, unlike a distance countdown to a
+    /// point we never had.
+    func testEnteringAStretchAlertsOnce() {
+        let route = eastboundRoute()
+        let stretch = (0...30).map { [9.05 + Double($0) * 0.001, 45.0] }
+        let engine = AlertEngine(
+            findings: [.fixed(stretchCamera(stretch), alongTrackMetres: 3_900)],
+            route: route
+        )
+        let alerts = drive(engine, from: 9.000, to: 9.150, course: 90)
+        XCTAssertEqual(alerts.count, 1, "one warning per stretch per trip")
+        XCTAssertEqual(alerts.first?.kind, .fixedCamera)
+    }
+
+    func testTheStretchWarningDoesNotClaimADistance() {
+        let route = eastboundRoute()
+        let stretch = (0...30).map { [9.05 + Double($0) * 0.001, 45.0] }
+        let engine = AlertEngine(
+            findings: [.fixed(stretchCamera(stretch), alongTrackMetres: 3_900)],
+            route: route
+        )
+        let alert = drive(engine, from: 9.000, to: 9.150, course: 90).first
+        XCTAssertNil(alert?.distanceMetres,
+                     "we do not know where along the stretch it is, so claim no distance")
+        let message = (alert?.message ?? "").lowercased()
+        XCTAssertTrue(message.contains("limite"))
+        XCTAssertFalse(message.contains("metri"), "no invented distance in the copy")
+    }
+
+    func testAStretchNotYetReachedStaysSilent() {
+        let route = eastboundRoute()
+        let stretch = (0...30).map { [9.12 + Double($0) * 0.001, 45.0] }
+        let engine = AlertEngine(
+            findings: [.fixed(stretchCamera(stretch), alongTrackMetres: 9_400)],
+            route: route
+        )
+        // Stop well before the stretch begins.
+        XCTAssertTrue(drive(engine, from: 9.000, to: 9.050, course: 90).isEmpty)
+    }
+}

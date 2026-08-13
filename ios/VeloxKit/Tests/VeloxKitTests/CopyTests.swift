@@ -15,6 +15,7 @@ final class CopyTests: XCTestCase {
             Copy.mitRegisterExplainer(deviceCount: 4110),
             Copy.mitSearchPrompt,
             Copy.mitNoMatch,
+            Copy.stretchEntryAlert(road: "A4"),
         ]
     }
 

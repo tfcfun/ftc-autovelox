@@ -57,6 +57,20 @@ public final class AlertEngine {
         for finding in findings where !fired.contains(finding.id) {
             switch finding {
             case .fixed(let camera, let alongTrack):
+                // Known only as a stretch: warn on ENTRY. Being on the stretch is
+                // a fact we can detect; a distance to a point we never had is not.
+                if !camera.uncertaintyStretches.isEmpty {
+                    guard progress >= alongTrack else { continue }
+                    fired.insert(finding.id)
+                    return Alert(
+                        id: finding.id, kind: .fixedCamera,
+                        message: Copy.stretchEntryAlert(
+                            road: camera.roadRef ?? camera.roadName
+                        ),
+                        distanceMetres: nil
+                    )
+                }
+
                 // Most cameras are placed from their comune, which is accurate to
                 // roughly 1-2 km, because the source PDFs name roads
                 // descriptively and never by reference. An 800 m warning fired

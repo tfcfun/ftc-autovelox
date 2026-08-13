@@ -75,15 +75,41 @@ struct ResultView: View {
                 .stroke(.orange, lineWidth: 6)
             }
 
-            ForEach(fixedFindings, id: \.0.id) { camera, _ in
-                if let coordinate = camera.coordinate {
-                    Marker(camera.roadRef ?? camera.roadName,
-                           systemImage: "camera.fill",
-                           coordinate: CLLocationCoordinate2D(
-                               latitude: coordinate.lat, longitude: coordinate.lon))
-                    .tint(.red)
-                }
+            // A camera known only as a stretch is drawn AS that stretch. Dropping
+            // a pin on its framing centre would put a marker somewhere the
+            // Polizia never said a camera was.
+            ForEach(fixedStretches, id: \.id) { item in
+                MapPolyline(coordinates: item.coordinates.map {
+                    CLLocationCoordinate2D(latitude: $0.lat, longitude: $0.lon)
+                })
+                .stroke(.red.opacity(0.55), lineWidth: 8)
             }
+
+            ForEach(fixedPoints, id: \.0.id) { camera, coordinate in
+                Marker(camera.roadRef ?? camera.roadName,
+                       systemImage: "camera.fill",
+                       coordinate: CLLocationCoordinate2D(
+                           latitude: coordinate.lat, longitude: coordinate.lon))
+                .tint(.red)
+            }
+        }
+    }
+
+    /// Cameras we know only as an area, one entry per stretch so ForEach can key it.
+    private var fixedStretches: [(id: String, coordinates: [Coordinate])] {
+        fixedFindings.flatMap { camera, _ in
+            camera.uncertaintyStretches.enumerated().map { index, stretch in
+                (id: "\(camera.id)-\(index)", coordinates: stretch)
+            }
+        }
+    }
+
+    /// Cameras with a genuine interpolated point - the only ones that get a pin.
+    private var fixedPoints: [(FixedCamera, Coordinate)] {
+        fixedFindings.compactMap { camera, _ in
+            guard camera.uncertaintyStretches.isEmpty,
+                  let coordinate = camera.coordinate else { return nil }
+            return (camera, coordinate)
         }
     }
 

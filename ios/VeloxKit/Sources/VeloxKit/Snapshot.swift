@@ -73,6 +73,13 @@ public struct FixedCamera: Codable, Equatable, Identifiable, Sendable {
     public let geocodeConfidence: String
     public let verified: Bool
 
+    /// The road stretches this camera sits somewhere along, as [lon, lat] pairs.
+    ///
+    /// The sources publish a road, a comune and usually a direction, never a
+    /// coordinate. For most cameras this stretch IS what is known - drawing a
+    /// point instead would invent a precision the Polizia never published.
+    public let uncertaintyWays: [[[Double]]]
+
     enum CodingKeys: String, CodingKey {
         case id, network, region, comune, province, lat, lon, km, verified
         case roadName = "road_name"
@@ -81,12 +88,65 @@ public struct FixedCamera: Codable, Equatable, Identifiable, Sendable {
         case directionRaw = "direction_raw"
         case bearingDeg = "bearing_deg"
         case geocodeConfidence = "geocode_confidence"
+        case uncertaintyWays = "uncertainty_ways"
     }
 
-    /// nil when the camera could not be placed. Never substitutes 0,0.
+    public init(
+        id: String, network: String, region: String, roadName: String, roadRef: String?,
+        kmRaw: String, km: Double?, directionRaw: String?, bearingDeg: Int?,
+        comune: String, province: String, lat: Double?, lon: Double?,
+        geocodeConfidence: String, verified: Bool, uncertaintyWays: [[[Double]]] = []
+    ) {
+        self.id = id; self.network = network; self.region = region
+        self.roadName = roadName; self.roadRef = roadRef; self.kmRaw = kmRaw; self.km = km
+        self.directionRaw = directionRaw; self.bearingDeg = bearingDeg
+        self.comune = comune; self.province = province; self.lat = lat; self.lon = lon
+        self.geocodeConfidence = geocodeConfidence; self.verified = verified
+        self.uncertaintyWays = uncertaintyWays
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        network = try c.decode(String.self, forKey: .network)
+        region = try c.decode(String.self, forKey: .region)
+        roadName = try c.decode(String.self, forKey: .roadName)
+        roadRef = try c.decodeIfPresent(String.self, forKey: .roadRef)
+        kmRaw = try c.decode(String.self, forKey: .kmRaw)
+        km = try c.decodeIfPresent(Double.self, forKey: .km)
+        directionRaw = try c.decodeIfPresent(String.self, forKey: .directionRaw)
+        bearingDeg = try c.decodeIfPresent(Int.self, forKey: .bearingDeg)
+        comune = try c.decode(String.self, forKey: .comune)
+        province = try c.decode(String.self, forKey: .province)
+        lat = try c.decodeIfPresent(Double.self, forKey: .lat)
+        lon = try c.decodeIfPresent(Double.self, forKey: .lon)
+        geocodeConfidence = try c.decode(String.self, forKey: .geocodeConfidence)
+        verified = try c.decode(Bool.self, forKey: .verified)
+        // Older snapshots predate stretches; absence is empty, never an error.
+        uncertaintyWays = try c.decodeIfPresent([[[Double]]].self,
+                                                forKey: .uncertaintyWays) ?? []
+    }
+
+    /// A framing centre only. For a stretch-located camera this is NOT where the
+    /// camera is - it is the middle of the area it might be in.
     public var coordinate: Coordinate? {
         guard let lat, let lon else { return nil }
         return Coordinate(lat: lat, lon: lon)
+    }
+
+    /// The stretches as coordinates, converted from the stored [lon, lat] order.
+    public var uncertaintyStretches: [[Coordinate]] {
+        uncertaintyWays.map { way in
+            way.compactMap { pair in
+                pair.count == 2 ? Coordinate(lat: pair[1], lon: pair[0]) : nil
+            }
+        }
+        .filter { $0.count >= 2 }
+    }
+
+    /// Whether we know anything at all about where this camera is.
+    public var isLocated: Bool {
+        !uncertaintyStretches.isEmpty || coordinate != nil
     }
 }
 

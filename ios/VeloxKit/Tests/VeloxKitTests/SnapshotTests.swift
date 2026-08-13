@@ -50,3 +50,48 @@ final class SnapshotTests: XCTestCase {
         }
     }
 }
+
+// MARK: - Areas of uncertainty
+
+extension SnapshotTests {
+    /// The sources give a road and a comune, never a coordinate, so most cameras
+    /// are known only as the stretch they sit somewhere along.
+    func testDecodesUncertaintyStretches() throws {
+        let snapshot = try Snapshot.load(from: fixtureURL())
+        let withExtent = snapshot.fixedCameras.first { !$0.uncertaintyWays.isEmpty }
+        let camera = try XCTUnwrap(withExtent, "the fixture must carry a stretch")
+        XCTAssertGreaterThanOrEqual(camera.uncertaintyStretches.first?.count ?? 0, 2)
+    }
+
+    func testStretchCoordinatesAreLatLonNotLonLat() throws {
+        let snapshot = try Snapshot.load(from: fixtureURL())
+        for camera in snapshot.fixedCameras {
+            for stretch in camera.uncertaintyStretches {
+                for point in stretch {
+                    // Italy: latitude 35-48, longitude 6-19. Swapping them puts
+                    // every camera in the sea off Somalia.
+                    XCTAssertTrue((35...48).contains(point.lat), "lat \(point.lat)")
+                    XCTAssertTrue((6...19).contains(point.lon), "lon \(point.lon)")
+                }
+            }
+        }
+    }
+
+    func testACameraWithAStretchIsLocatedEvenWithoutATrustedPoint() throws {
+        let snapshot = try Snapshot.load(from: fixtureURL())
+        let camera = try XCTUnwrap(snapshot.fixedCameras.first { !$0.uncertaintyWays.isEmpty })
+        XCTAssertTrue(camera.isLocated)
+        XCTAssertFalse(camera.isTrustworthyForProximityAlerts,
+                       "a stretch is not a point and must never drive a distance countdown")
+    }
+
+    func testAnUnlocatedCameraReportsItself() throws {
+        let camera = FixedCamera(
+            id: "fx-none", network: "ordinaria", region: "Lombardia", roadName: "?",
+            roadRef: nil, kmRaw: "1+000", km: 1, directionRaw: nil, bearingDeg: nil,
+            comune: "Meseno", province: "MI", lat: nil, lon: nil,
+            geocodeConfidence: "none", verified: false, uncertaintyWays: []
+        )
+        XCTAssertFalse(camera.isLocated)
+    }
+}
