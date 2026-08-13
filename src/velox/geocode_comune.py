@@ -31,6 +31,16 @@ _HIGHWAY_CLASSES = {
     "ordinaria": ["trunk", "primary"],
 }
 
+# Widening steps, tried in order until one returns ways.
+_CLASS_LADDER = {
+    "autostrada": (["motorway"], ["motorway", "trunk"]),
+    "ordinaria": (["trunk", "primary"], ["secondary", "tertiary"]),
+}
+
+
+def _class_ladder(network: str) -> tuple[list[str], ...]:
+    return _CLASS_LADDER.get(network, (["trunk", "primary"], ["secondary", "tertiary"]))
+
 
 def cache_key(comune: str, province: str, network: str) -> str:
     safe = re.sub(r"[^A-Za-z0-9]", "", comune)
@@ -38,28 +48,51 @@ def cache_key(comune: str, province: str, network: str) -> str:
 
 
 def _name_pattern(comune: str) -> str:
-    """An anchored regex matching the comune name whatever apostrophe it uses.
+    """A PREFIX regex matching the comune name as OSM actually spells it.
 
-    The PDFs print a curly apostrophe (U+2019) - "Quarto d'Altino",
-    "Sant'Anastasia" - while OSM overwhelmingly uses the straight one. An exact
-    ["name"="..."] match therefore returns nothing for every such comune, which
-    is a silent miss rather than an error. Verified 2026-08-13: Quarto d'Altino
-    found nothing on exact match.
+    Two real failures shaped this, both verified live on 2026-08-13:
+
+    * Apostrophes. The PDFs print U+2019 ("Quarto d'Altino", "Sant'Anastasia");
+      OSM uses the straight quote. An exact match returned nothing.
+    * Bilingual names. OSM calls Claut "Claut / Cjolt" - Italian and Friulian in
+      one name tag. An ANCHORED match therefore finds nothing across all of
+      Friuli, Alto Adige (German) and Valle d'Aosta (French). This is systematic,
+      not a handful of odd comuni.
+
+    Anchoring only at the start keeps the match cheap and tolerates the
+    "Italian / local" form. It is scoped to one province by the caller, so a
+    prefix is specific enough.
     """
     escaped = re.escape(comune)
     # re.escape may or may not escape these depending on version; handle both.
     for variant in ("\\’", "’", "\\'", "'", "\\´", "´"):
         escaped = escaped.replace(variant, "APOSTROPHE")
     escaped = escaped.replace("APOSTROPHE", "['’´]")
-    return f"^{escaped}$"
+    return f"^{escaped}"
 
 
-def _build_query(comune: str, network: str) -> str:
-    classes = "|".join(_HIGHWAY_CLASSES.get(network, ["trunk", "primary"]))
+def _build_query(comune: str, province: str, network: str) -> str:
+    return _build_query_for(
+        comune, province, _HIGHWAY_CLASSES.get(network, ["trunk", "primary"])
+    )
+
+
+def _build_query_for(comune: str, province: str, highway_classes: list[str]) -> str:
+    """Find the comune INSIDE its province, then the roads inside the comune.
+
+    Searching comune names globally is not an option: an unanchored name regex
+    over every Italian comune times out with HTTP 504. Scoping to the province
+    - which every camera row carries - makes the lookup indexed, fast, and
+    immune to two comuni sharing a name in different provinces.
+    """
+    classes = "|".join(highway_classes)
     pattern = _name_pattern(comune).replace('"', '\\"')
     return (
         "[out:json][timeout:90];"
-        f'area["boundary"="administrative"]["admin_level"="8"]["name"~"{pattern}",i]->.c;'
+        f'area["ISO3166-2"="IT-{province}"]["admin_level"="6"]->.prov;'
+        f'rel(area.prov)["boundary"="administrative"]["admin_level"="8"]'
+        f'["name"~"{pattern}",i];'
+        "map_to_area->.c;"
         f'(way["highway"~"^({classes})$"](area.c););'
         "out geom;"
     )
@@ -121,7 +154,17 @@ def locate(
 
         client = _default_client
 
-    elements = client(_build_query(comune, network)).get("elements", [])
+    # Try the expected road classes first, then widen. Small comuni carry roads
+    # that OSM tags below trunk/primary even when the PDF calls them statali -
+    # San Vito al Tagliamento, Spilimbergo, Claut and Erto e Casso all returned
+    # nothing on the narrow filter. Widening trades reference precision (more
+    # roads means less consensus) for a coordinate, which is the thing we need.
+    elements: list[dict] = []
+    for classes in _class_ladder(network):
+        elements = client(_build_query_for(comune, province, classes)).get("elements", [])
+        if elements:
+            break
+
     centre = _centroid(elements)
     if centre is None:
         # Do NOT cache a miss: it may be a transient rate-limit dressed as

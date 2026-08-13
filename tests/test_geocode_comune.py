@@ -6,6 +6,7 @@ import re
 
 from velox.geocode_comune import (
     _build_query,
+    _build_query_for,
     _centroid,
     _consensus_ref,
     _name_pattern,
@@ -30,8 +31,8 @@ def test_cache_key_is_filesystem_safe():
 
 
 def test_query_selects_motorway_for_autostrada_and_trunk_for_ordinaria():
-    assert "motorway" in _build_query("Noventa di Piave", "autostrada")
-    ordinary = _build_query("Todi", "ordinaria")
+    assert "motorway" in _build_query("Noventa di Piave", "VE", "autostrada")
+    ordinary = _build_query("Todi", "PG", "ordinaria")
     assert "trunk" in ordinary and "primary" in ordinary
     assert "motorway" not in ordinary
 
@@ -45,11 +46,24 @@ def test_query_matches_either_apostrophe_character():
         assert re.match(pattern, name), "must still match the curly form"
 
 
-def test_query_anchors_the_name_so_a_prefix_does_not_match():
+def test_pattern_matches_a_bilingual_osm_name():
+    """OSM calls Claut "Claut / Cjolt". An anchored match found nothing across
+    all of Friuli, Alto Adige and Valle d'Aosta."""
+    pattern = _name_pattern("Claut")
+    assert re.match(pattern, "Claut / Cjolt")
+    assert re.match(pattern, "Claut")
+
+
+def test_pattern_is_anchored_at_the_start_so_it_stays_cheap():
     pattern = _name_pattern("Nola")
-    assert pattern.startswith("^") and pattern.endswith("$")
-    assert re.match(pattern, "Nola")
-    assert not re.match(pattern, "Nolatown")
+    assert pattern.startswith("^")
+    assert not re.match(pattern, "Marigliano di Nola")
+
+
+def test_query_is_scoped_to_the_province():
+    query = _build_query_for("Claut", "PN", ["trunk"])
+    assert '"ISO3166-2"="IT-PN"' in query
+    assert "map_to_area" in query
 
 
 def test_consensus_ref_requires_unanimity():
@@ -114,3 +128,34 @@ def test_missing_comune_never_queries(tmp_path):
     assert locate("?", "VE", "autostrada", cache_dir=tmp_path, client=_explode) is None
     assert locate("", "VE", "autostrada", cache_dir=tmp_path, client=_explode) is None
     assert locate("Todi", "", "ordinaria", cache_dir=tmp_path, client=_explode) is None
+
+
+def test_locate_widens_the_road_class_when_the_narrow_filter_finds_nothing(tmp_path):
+    """Small comuni carry statali that OSM tags as secondary. Verified: four
+    Friuli comuni returned nothing on trunk/primary alone."""
+    seen = []
+
+    def _client(query):
+        seen.append(query)
+        if "trunk" in query and "secondary" not in query:
+            return {"elements": []}
+        return {"elements": [{"type": "way", "tags": {"highway": "secondary"},
+                              "geometry": [{"lon": 12.8, "lat": 46.0}]}]}
+
+    result = locate("Claut", "PN", "ordinaria", cache_dir=tmp_path, client=_client)
+    assert result is not None, "the widened query must place the camera"
+    assert len(seen) == 2, "narrow filter first, then widened"
+    assert abs(result["lat"] - 46.0) < 1e-9
+
+
+def test_locate_stops_at_the_first_ladder_step_that_succeeds(tmp_path):
+    calls = []
+
+    def _client(query):
+        calls.append(query)
+        return {"elements": [{"type": "way", "tags": {"highway": "trunk", "ref": "SS13"},
+                              "geometry": [{"lon": 12.8, "lat": 46.0}]}]}
+
+    assert locate("Spilimbergo", "PN", "ordinaria",
+                  cache_dir=tmp_path, client=_client)["ref"] == "SS13"
+    assert len(calls) == 1, "a successful narrow query must not be followed by a wider one"
