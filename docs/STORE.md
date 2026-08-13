@@ -17,28 +17,23 @@ Home-screen name (`CFBundleDisplayName`) is the same and fits without truncation
 ## Subtitle (max 30 characters)
 
 ```
-Controlli Autovelox PDS
+Autovelox - dati PDS
 ```
 
-23 characters. Used as the SUBTITLE, with "FTC Autovelox" as the app name.
+20 characters, used as the SUBTITLE behind the app name "FTC Autovelox".
 
-That distinction matters. A police abbreviation in the app NAME would imply the
-app is the force's own, which Apple rejects; as a subtitle behind a distinct
-brand name it simply describes what the app covers, which is the normal pattern.
+"dati PDS" states the app USES their data rather than claiming to be theirs.
+That framing is what keeps it clear of the affiliation problem: a police
+abbreviation in the app NAME would imply the app is the force's own, which
+Apple rejects; naming them as the source is normal and expected.
 
-Residual consideration is clarity, not compliance: "PDS" is not a common
-abbreviation in everyday Italian - people say "Polizia" or "Polizia Stradale" -
-and the subtitle is the one-line pitch on the store card.
-
-Alternatives, same meaning, spelled out:
+Alternatives, if the abbreviation proves too opaque for users:
 
 | | chars |
 |---|---|
+| Autovelox - dati Polizia | 24 |
 | Controlli Polizia Stradale | 26 |
 | Dati della Polizia Stradale | 27 |
-| Autovelox: fonti ufficiali | 26 |
-| Pubblicazioni Polizia Stradale | 30 |
-| Dove si controlla la velocità | 29 |
 
 ## Description
 
