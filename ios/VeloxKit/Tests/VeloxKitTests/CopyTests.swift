@@ -18,6 +18,9 @@ final class CopyTests: XCTestCase {
             Copy.stretchEntryAlert(road: "A4"),
             Copy.appPurpose,
             Copy.routeIntro,
+            Copy.testAlert,
+            Copy.liveModeExplainer,
+            Copy.liveModeIdle,
             Copy.dataCoverage(from: "10/08", to: "16/08", publishedAt: "13/08/2026"),
             Copy.dataAsOf(publishedAt: "13/08/2026"),
             Copy.refreshFailed(publishedAt: "13/08/2026"),
@@ -59,5 +62,14 @@ extension CopyTests {
     func testFreshnessMessagesAlwaysCarryTheDate() {
         XCTAssertTrue(Copy.dataAsOf(publishedAt: "13/08/2026").contains("13/08/2026"))
         XCTAssertTrue(Copy.refreshFailed(publishedAt: "13/08/2026").contains("13/08/2026"))
+    }
+}
+
+extension CopyTests {
+    /// The test alert must announce itself as a test, or it teaches the driver
+    /// to treat a real warning as a drill.
+    func testTheTestAlertSaysItIsATest() {
+        XCTAssertTrue(Copy.testAlert.lowercased().contains("prova"))
+        XCTAssertTrue(Copy.testAlert.lowercased().contains("limite"))
     }
 }

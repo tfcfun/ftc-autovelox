@@ -2,6 +2,8 @@ import SwiftUI
 import VeloxKit
 
 struct InfoView: View {
+    @State private var announcer = Announcer()
+
     @Environment(SnapshotProvider.self) private var provider
 
     var body: some View {
@@ -16,6 +18,17 @@ struct InfoView: View {
                             .foregroundStyle(.secondary)
                     }
                     .padding(.vertical, 2)
+                }
+
+                Section("Avvisi") {
+                    Button {
+                        announcer.speak(Copy.testAlert)
+                    } label: {
+                        Label("Prova avviso vocale", systemImage: "speaker.wave.2.fill")
+                    }
+                    Text("Riproduce un avviso di prova, per verificare volume e voce senza dover guidare.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
 
                 Section("Copertura") {

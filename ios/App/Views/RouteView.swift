@@ -30,6 +30,7 @@ struct RouteView: View {
     /// be exercised in the simulator without typing addresses. Not user-reachable.
     @State private var demoTripResult: RouteResult?
     @State private var currentPlace = CurrentPlace()
+    @State private var isLivePresented = false
 
     var body: some View {
         NavigationStack {
@@ -82,6 +83,19 @@ struct RouteView: View {
                         Text(errorText).foregroundStyle(.red).font(.callout)
                     }
                 }
+                Section("Senza percorso") {
+                    Button {
+                        isLivePresented = true
+                    } label: {
+                        Label("Modalità live", systemImage: "dot.radiowaves.left.and.right")
+                            .font(.body.weight(.medium))
+                    }
+                    .disabled(provider.snapshot == nil)
+                    Text(Copy.liveModeExplainer)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
                 if let note = provider.freshnessNote {
                     Section {
                         Text(note).font(.footnote).foregroundStyle(.secondary)
@@ -108,6 +122,7 @@ struct RouteView: View {
             .fullScreenCover(item: $demoTripResult) { demo in
                 TripView(result: demo)
             }
+            .fullScreenCover(isPresented: $isLivePresented) { LiveView() }
             .task { await presentDemoTripIfRequested() }
             .onChange(of: provider.snapshot?.index.week) { _, _ in
                 clampDateIntoCoverage()

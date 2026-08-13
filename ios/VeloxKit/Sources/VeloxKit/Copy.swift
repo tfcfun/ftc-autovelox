@@ -127,3 +127,21 @@ public extension Copy {
         "Programma della Polizia Stradale dal \(from) al \(to). Pubblicato il \(publishedAt)."
     }
 }
+
+public extension Copy {
+    /// Spoken by the test button so the voice can be checked without driving.
+    ///
+    /// Says plainly that it is a test: a phrase identical to a real warning
+    /// would teach the wrong reflex.
+    static let testAlert = """
+        Questo è un avviso di prova. Controllo velocità sul tratto — rispetta il limite.
+        """
+
+    static let liveModeExplainer = """
+        Ti avvisa quando entri in un tratto dove è pubblicato un controllo, \
+        senza dover impostare un percorso. Resta attiva finché non la fermi tu.
+        """
+
+    static let liveModeArmed = "Modalità live attiva"
+    static let liveModeIdle = "Nessun controllo nelle vicinanze."
+}
