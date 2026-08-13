@@ -37,7 +37,19 @@ targets:
     settings:
       base:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        PRODUCT_BUNDLE_IDENTIFIER: com.tfcfun.ftcautovelox
+        PRODUCT_BUNDLE_IDENTIFIER: com.tfcfun.autovelox
+        # NOTE: com.tfcfun.ftcautovelox is unusable - the free personal team
+        # claimed it during a mis-signed archive, bundle ids are globally unique
+        # at Apple, and personal-team identifiers cannot be released. Hence
+        # com.tfcfun.autovelox.
+        #
+        # Pinned deliberately. Two teams on this account are both named
+        # "the account holder": 24P495T83P is the FREE personal team, which cannot
+        # distribute to TestFlight or the App Store at all, and W6H9FGY3NX is the
+        # paid membership. Xcode picked the free one and the App ID landed on a
+        # team with no App Store Connect presence, which is why the bundle ID
+        # dropdown was empty. Pinning it stops that recurring silently.
+        DEVELOPMENT_TEAM: W6H9FGY3NX
         SWIFT_VERSION: "6.0"
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: NO
