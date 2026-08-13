@@ -1,6 +1,6 @@
 name: VeloxItalia
 options:
-  bundleIdPrefix: net.veloxitalia
+  bundleIdPrefix: com.tfcfun
   deploymentTarget:
     iOS: "17.0"
 packages:
@@ -37,7 +37,7 @@ targets:
     settings:
       base:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        PRODUCT_BUNDLE_IDENTIFIER: net.veloxitalia.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.tfcfun.ftcautovelox
         SWIFT_VERSION: "6.0"
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: NO
