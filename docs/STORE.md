@@ -80,13 +80,58 @@ per ridurre gli incidenti.
 
 ## Review notes (for App Review, not public)
 
+Entered verbatim in App Store Connect. Covers the two questions a reviewer will
+actually have: where the data comes from, and why the app uses background
+location.
+
 ```
-All camera and speed-check data in this app is published by Italian law
-enforcement (Polizia di Stato) and by the Ministry of Infrastructure and
-Transport. The app contains no user-submitted reports of any kind. Source URLs:
-https://www.poliziadistato.it/articolo/autovelox-e-tutor-dove-sono and
+DATA SOURCE
+All speed-check data in this app is published by Italian law enforcement: the
+Polizia di Stato (Polizia Stradale) weekly programme of mobile speed checks and
+its national lists of fixed installations, plus the Ministry of Infrastructure
+and Transport register of approved devices. The app contains NO user-submitted
+reports of any kind and has no mechanism to add them.
+https://www.poliziadistato.it/articolo/autovelox-e-tutor-dove-sono
 https://velox.mit.gov.it/dispositivi
+
+LOCATION USE
+The app requests When In Use location only. It never requests Always. Background
+location is used solely while the user has explicitly started "Modalita viaggio"
+(trip mode) from the results screen, so that a spoken warning can be given when
+entering a road stretch where a check is published. Trip mode is off by default
+and stops when the user ends it.
+
+NO ACCOUNT
+The app has no sign-in, no accounts and no server backend. It reads a static
+JSON dataset published at https://tfcfun.github.io/ftc-autovelox/data/latest/
+and works offline from a bundled copy.
+
+FRAMING
+All in-app wording refers to respecting the speed limit. The app cannot and does
+not state that a road is clear: the sources cover Polizia Stradale enforcement
+only, and this limitation is stated in the app's Info screen and in the App
+Store description.
 ```
+
+"Sign-in required" must stay UNCHECKED - the app has no accounts, and leaving
+the default ticked with blank credentials stalls review.
+
+## App Store Connect record
+
+| | |
+|---|---|
+| Apple ID | 6801183288 |
+| Bundle ID | com.tfcfun.autovelox |
+| SKU | ftc-autovelox-001 |
+| Primary language | Italian |
+| Category | Navigation |
+| Support URL | https://github.com/tfcfun/ftc-autovelox |
+| Copyright | 2026 FTC |
+| Keywords | autovelox,tutor,polizia stradale,controlli velocita,multa,limiti,percorso,statali,viaggio |
+
+Screenshots: `docs/store-screenshots/65/` at 1284x2778. Captured on an iPhone 17
+Pro Max (1320x2868, the 6.9" size) then scaled to width and cropped 12px, since
+App Store Connect's slot on this record wants the 6.5" dimensions.
 
 ## Still to decide
 
