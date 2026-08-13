@@ -121,3 +121,63 @@ final class AlertEngineTests: XCTestCase {
         }
     }
 }
+
+// MARK: - Placement confidence
+
+extension AlertEngineTests {
+    private func camera(confidence: String, verified: Bool) -> FixedCamera {
+        FixedCamera(
+            id: "fx-conf-\(confidence)-\(verified)", network: "ordinaria", region: "Campania",
+            roadName: "Del Vesuvio", roadRef: nil, kmRaw: "11+500", km: 11.5,
+            directionRaw: nil, bearingDeg: nil, comune: "Nola", province: "NA",
+            lat: 45.0, lon: 9.100, geocodeConfidence: confidence, verified: verified
+        )
+    }
+
+    /// Fixed cameras are placed from their comune, which is accurate to roughly
+    /// 1-2 km. Firing an 800 m warning off a 2 km guess cries wolf, and a driver
+    /// who learns to ignore the app is worse off than one who never installed it.
+    func testLowConfidenceUnverifiedCameraNeverAlerts() {
+        let route = eastboundRoute()
+        let engine = AlertEngine(
+            findings: [.fixed(camera(confidence: "low", verified: false),
+                              alongTrackMetres: 7_800)],
+            route: route
+        )
+        XCTAssertTrue(drive(engine, from: 9.000, to: 9.150, course: 90).isEmpty)
+    }
+
+    func testAHumanVerifiedCameraAlertsEvenAtLowConfidence() {
+        let route = eastboundRoute()
+        let engine = AlertEngine(
+            findings: [.fixed(camera(confidence: "low", verified: true),
+                              alongTrackMetres: 7_800)],
+            route: route
+        )
+        XCTAssertEqual(drive(engine, from: 9.000, to: 9.150, course: 90).count, 1,
+                       "review is what makes a point trustworthy")
+    }
+
+    func testHighConfidenceCameraAlertsWithoutReview() {
+        let route = eastboundRoute()
+        let engine = AlertEngine(
+            findings: [.fixed(camera(confidence: "high", verified: false),
+                              alongTrackMetres: 7_800)],
+            route: route
+        )
+        XCTAssertEqual(drive(engine, from: 9.000, to: 9.150, course: 90).count, 1)
+    }
+
+    func testScheduledRoadStillAlertsRegardlessOfCameraConfidence() {
+        let route = eastboundRoute()
+        let check = MobileCheck(
+            id: "mb-conf", date: "2026-08-14", week: "2026-W33", region: "Lombardia",
+            roadType: "Strada Statale", roadRef: "SS9", roadName: "via Emilia",
+            province: "LO", segmentId: "seg-SS9-LO"
+        )
+        let engine = AlertEngine(findings: [.mobile(check, alongTrackMetres: 2_000)],
+                                 route: route)
+        XCTAssertEqual(drive(engine, from: 9.000, to: 9.150, course: 90).count, 1,
+                       "a scheduled road is not a placed point and is unaffected")
+    }
+}

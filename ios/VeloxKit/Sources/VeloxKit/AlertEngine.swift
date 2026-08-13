@@ -57,6 +57,13 @@ public final class AlertEngine {
         for finding in findings where !fired.contains(finding.id) {
             switch finding {
             case .fixed(let camera, let alongTrack):
+                // Most cameras are placed from their comune, which is accurate to
+                // roughly 1-2 km, because the source PDFs name roads
+                // descriptively and never by reference. An 800 m warning fired
+                // off a 2 km guess cries wolf, and a driver who learns to ignore
+                // the app is worse off than one who never installed it. Such a
+                // camera still appears on the map and in the route list.
+                guard camera.isTrustworthyForProximityAlerts else { continue }
                 let remaining = alongTrack - progress
                 guard remaining >= 0, remaining <= Self.approachWindowMetres else { continue }
                 if let cameraBearing = camera.bearingDeg, let course = fix.courseDegrees {

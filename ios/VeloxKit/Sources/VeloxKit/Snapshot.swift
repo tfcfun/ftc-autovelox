@@ -179,3 +179,15 @@ public struct Snapshot: Equatable, Sendable {
         )
     }
 }
+
+public extension FixedCamera {
+    /// Whether this camera's position is good enough to warn a moving driver.
+    ///
+    /// Only two things earn that: a human confirmed the point during the review
+    /// pass, or the pipeline placed it by interpolating a real kilometre marker
+    /// along known road geometry. Comune-derived placement is roughly 1-2 km out
+    /// and is map-only.
+    var isTrustworthyForProximityAlerts: Bool {
+        verified || geocodeConfidence == "high"
+    }
+}
