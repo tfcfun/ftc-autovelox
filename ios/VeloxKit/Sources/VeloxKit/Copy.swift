@@ -110,3 +110,20 @@ public extension Copy {
         "Aggiornamento non riuscito. Stai vedendo i dati pubblicati il \(publishedAt)."
     }
 }
+
+public extension Copy {
+    /// One line on the route screen explaining what it will do.
+    static let routeIntro = """
+        Inserisci partenza e arrivo e scegli il giorno: vedi i controlli di \
+        velocità pubblicati dalla Polizia Stradale lungo la tua strada, in \
+        ordine di percorrenza.
+        """
+
+    /// Freshness plus the window the published programme actually covers.
+    ///
+    /// The period is the useful half: it tells the user whether the day they
+    /// care about is inside the data at all.
+    static func dataCoverage(from: String, to: String, publishedAt: String) -> String {
+        "Programma della Polizia Stradale dal \(from) al \(to). Pubblicato il \(publishedAt)."
+    }
+}

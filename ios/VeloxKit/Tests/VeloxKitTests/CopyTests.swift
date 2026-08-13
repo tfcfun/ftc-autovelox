@@ -17,6 +17,8 @@ final class CopyTests: XCTestCase {
             Copy.mitNoMatch,
             Copy.stretchEntryAlert(road: "A4"),
             Copy.appPurpose,
+            Copy.routeIntro,
+            Copy.dataCoverage(from: "10/08", to: "16/08", publishedAt: "13/08/2026"),
             Copy.dataAsOf(publishedAt: "13/08/2026"),
             Copy.refreshFailed(publishedAt: "13/08/2026"),
         ]

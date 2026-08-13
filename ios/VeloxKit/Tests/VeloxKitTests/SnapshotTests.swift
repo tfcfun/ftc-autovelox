@@ -95,3 +95,26 @@ extension SnapshotTests {
         XCTAssertFalse(camera.isLocated)
     }
 }
+
+// MARK: - Coverage window
+
+extension SnapshotTests {
+    /// The date picker must offer only days the published programme covers.
+    /// Deriving that from the ISO week number is a guess; the PDF states it.
+    func testCoverageWindowComesFromTheSource() throws {
+        let snapshot = try Snapshot.load(from: fixtureURL())
+        let coverage = try XCTUnwrap(snapshot.index.coverage)
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = TimeZone(identifier: "Europe/Rome")
+        XCTAssertEqual(formatter.string(from: coverage.from), "2026-08-10")
+        XCTAssertEqual(formatter.string(from: coverage.to), "2026-08-16")
+    }
+
+    func testCoverageIsNilWhenTheSourceDidNotStateIt() throws {
+        let json = #"{"schema_version":1,"generated_at":"2026-08-13T06:00:00Z","week":"2026-W33","regions":{},"quarantine_count":0}"#
+        let index = try SnapshotIndex.decode(from: XCTUnwrap(json.data(using: .utf8)))
+        XCTAssertNil(index.coverage, "no window stated means no window claimed")
+    }
+}

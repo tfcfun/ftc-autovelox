@@ -23,15 +23,51 @@ public struct RegionStatus: Codable, Equatable, Sendable {
     }
 }
 
+/// The window the published weekly programme actually covers.
+///
+/// The Polizia publish "Validità da lunedì X a domenica Y" on each regional PDF.
+/// Deriving the window from the ISO week number instead would be a guess that
+/// happens to be right most weeks; this is what the source says.
+public struct Coverage: Codable, Equatable, Sendable {
+    public let validFrom: String?
+    public let validTo: String?
+
+    enum CodingKeys: String, CodingKey {
+        case validFrom = "valid_from"
+        case validTo = "valid_to"
+    }
+}
+
+public struct SnapshotSources: Codable, Equatable, Sendable {
+    public let poliziaMobile: Coverage?
+
+    enum CodingKeys: String, CodingKey {
+        case poliziaMobile = "polizia_mobile"
+    }
+}
+
 public struct SnapshotIndex: Codable, Equatable, Sendable {
     public let schemaVersion: Int
     public let generatedAt: String
     public let week: String
     public let regions: [String: RegionStatus]
     public let quarantineCount: Int
+    public let sources: SnapshotSources?
+
+    /// First and last day the published programme covers, as Dates.
+    public var coverage: (from: Date, to: Date)? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = TimeZone(identifier: "Europe/Rome")
+        guard let f = sources?.poliziaMobile?.validFrom,
+              let t = sources?.poliziaMobile?.validTo,
+              let from = formatter.date(from: f),
+              let to = formatter.date(from: t) else { return nil }
+        return (from, to)
+    }
 
     enum CodingKeys: String, CodingKey {
-        case week, regions
+        case week, regions, sources
         case schemaVersion = "schema_version"
         case generatedAt = "generated_at"
         case quarantineCount = "quarantine_count"

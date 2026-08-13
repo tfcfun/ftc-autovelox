@@ -20,6 +20,8 @@
 	<string>0.1</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Serve a segnalarti i controlli di velocità pubblicati dalla Polizia Stradale lungo il percorso, solo mentre la modalità viaggio è attiva.</string>
 	<key>UIBackgroundModes</key>

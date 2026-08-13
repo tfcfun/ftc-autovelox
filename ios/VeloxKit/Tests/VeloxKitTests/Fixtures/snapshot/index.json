@@ -4,9 +4,25 @@
  "week": "2026-W33",
  "files": {},
  "regions": {
-  "Lombardia": {"status": "ok", "updated_at": "2026-08-13T06:00:00Z", "rows": 3, "quarantined": 0},
-  "Sicilia": {"status": "stale", "updated_at": "2026-08-06T06:00:00Z", "rows": 5, "quarantined": 0}
+  "Lombardia": {
+   "status": "ok",
+   "updated_at": "2026-08-13T06:00:00Z",
+   "rows": 3,
+   "quarantined": 0
+  },
+  "Sicilia": {
+   "status": "stale",
+   "updated_at": "2026-08-06T06:00:00Z",
+   "rows": 5,
+   "quarantined": 0
+  }
  },
- "sources": {},
+ "sources": {
+  "polizia_mobile": {
+   "fetched_at": "2026-08-13T06:00:00Z",
+   "valid_from": "2026-08-10",
+   "valid_to": "2026-08-16"
+  }
+ },
  "quarantine_count": 0
 }

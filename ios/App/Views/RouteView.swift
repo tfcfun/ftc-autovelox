@@ -34,6 +34,12 @@ struct RouteView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Text(Copy.routeIntro)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
                 Section("Percorso") {
                     TextField("Partenza", text: $origin)
                         .textInputAutocapitalization(.words)
@@ -83,6 +89,19 @@ struct RouteView: View {
                 }
             }
             .navigationTitle("Percorso")
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    HStack(spacing: 8) {
+                        Image("Logo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 26, height: 26)
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                        Text("FTC Autovelox")
+                            .font(.headline)
+                    }
+                }
+            }
             .navigationDestination(item: $result) { result in
                 ResultView(result: result)
             }
@@ -90,6 +109,10 @@ struct RouteView: View {
                 TripView(result: demo)
             }
             .task { await presentDemoTripIfRequested() }
+            .onChange(of: provider.snapshot?.index.week) { _, _ in
+                clampDateIntoCoverage()
+            }
+            .onAppear { clampDateIntoCoverage() }
         }
     }
 
@@ -117,14 +140,30 @@ struct RouteView: View {
         )
     }
 
-    /// The selectable days: the published snapshot week when known.
+    /// The selectable days.
+    ///
+    /// Uses the window the Polizia actually printed on the PDFs
+    /// ("Validità da ... a ...") rather than inferring it from the ISO week
+    /// number. Offering a day the data does not cover would return an empty
+    /// result that looks like "no checks" when it really means "not published".
     private var dateRange: ClosedRange<Date> {
+        if let published = provider.coverageRange {
+            return published
+        }
         if let week = provider.snapshot?.index.week,
            let range = Self.weekRange(week),
            range.contains(date) || date < range.upperBound {
             return range
         }
         return Date()...Date().addingTimeInterval(6 * 86_400)
+    }
+
+    /// Clamp the selection into the covered window, so the picker never opens
+    /// on a day outside the data.
+    private func clampDateIntoCoverage() {
+        guard let range = provider.coverageRange else { return }
+        if date < range.lowerBound { date = range.lowerBound }
+        if date > range.upperBound { date = range.upperBound }
     }
 
     static func weekRange(_ week: String) -> ClosedRange<Date>? {

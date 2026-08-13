@@ -1,4 +1,5 @@
 import SwiftUI
+import MapKit
 import UIKit
 import VeloxKit
 
@@ -13,12 +14,21 @@ struct TripView: View {
     @State private var lastAlert: VeloxKit.Alert?
     @State private var progressMetres: Double = 0
     @State private var hasFix = false
+    /// Follows the vehicle. The point of the map is judging distance to the
+    /// highlighted stretch at a glance, so it stays centred on you.
+    @State private var camera: MapCameraPosition = .userLocation(fallback: .automatic)
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 16) {
             Text("Modalità viaggio attiva")
                 .font(.title2.weight(.semibold))
-                .padding(.top, 32)
+                .padding(.top, 20)
+
+            tripMap
+                .frame(maxWidth: .infinity)
+                .frame(height: 260)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .padding(.horizontal)
 
             if let alert = lastAlert {
                 Text(alert.message)
@@ -89,6 +99,79 @@ struct TripView: View {
                 announcer.speak(alert.message)
             }
         }
+    }
+
+    /// Live map: your position against the route and the monitored stretches.
+    ///
+    /// A stretch is drawn as the road it covers rather than a pin, because the
+    /// sources never say where along it the installation stands. Seeing the band
+    /// approach is the honest version of "how close am I".
+    @ViewBuilder
+    private var tripMap: some View {
+        Map(position: $camera) {
+            UserAnnotation()
+
+            MapPolyline(coordinates: result.routeCoordinates)
+                .stroke(.blue.opacity(0.65), lineWidth: 4)
+
+            ForEach(matchedSegments, id: \.id) { segment in
+                MapPolyline(coordinates: segment.coordinates.map {
+                    CLLocationCoordinate2D(latitude: $0.lat, longitude: $0.lon)
+                })
+                .stroke(.orange, lineWidth: 7)
+            }
+
+            ForEach(fixedStretches, id: \.id) { item in
+                MapPolyline(coordinates: item.coordinates.map {
+                    CLLocationCoordinate2D(latitude: $0.lat, longitude: $0.lon)
+                })
+                .stroke(.red.opacity(0.6), lineWidth: 8)
+            }
+
+            ForEach(fixedPoints, id: \.0.id) { camera, coordinate in
+                Marker(camera.roadRef ?? camera.roadName,
+                       systemImage: "camera.fill",
+                       coordinate: CLLocationCoordinate2D(
+                           latitude: coordinate.lat, longitude: coordinate.lon))
+                .tint(.red)
+            }
+        }
+        .mapControls {
+            MapUserLocationButton()
+            MapCompass()
+        }
+    }
+
+    private var fixedStretches: [(id: String, coordinates: [Coordinate])] {
+        fixedFindings.flatMap { camera, _ in
+            camera.uncertaintyStretches.enumerated().map { index, stretch in
+                (id: "\(camera.id)-\(index)", coordinates: stretch)
+            }
+        }
+    }
+
+    private var fixedPoints: [(FixedCamera, Coordinate)] {
+        fixedFindings.compactMap { camera, _ in
+            guard camera.uncertaintyStretches.isEmpty,
+                  let coordinate = camera.coordinate else { return nil }
+            return (camera, coordinate)
+        }
+    }
+
+    private var fixedFindings: [(FixedCamera, Double)] {
+        result.findings.compactMap {
+            if case .fixed(let camera, let metres) = $0 { return (camera, metres) }
+            return nil
+        }
+    }
+
+    private var matchedSegments: [RoadSegment] {
+        guard let snapshot = provider.snapshot else { return [] }
+        let ids = Set(result.findings.compactMap { finding -> String? in
+            if case .mobile(let check, _) = finding { return check.segmentId }
+            return nil
+        })
+        return snapshot.roadSegments.filter { ids.contains($0.id) }
     }
 
     @Environment(SnapshotProvider.self) private var provider

@@ -38,11 +38,25 @@ final class SnapshotProvider {
     /// them whether to trust the screen. A failed refresh over current data is a
     /// statement of fact, not a warning.
     var freshnessNote: String? {
-        guard snapshot != nil else { return nil }
+        guard let snapshot else { return nil }
         if didRefreshFail && !isDataCurrent {
             return Copy.refreshFailed(publishedAt: publishedAtDisplay)
         }
+        if let coverage = snapshot.index.coverage {
+            let short = DateFormatter()
+            short.locale = Locale(identifier: "it_IT")
+            short.dateFormat = "dd/MM"
+            return Copy.dataCoverage(from: short.string(from: coverage.from),
+                                     to: short.string(from: coverage.to),
+                                     publishedAt: publishedAtDisplay)
+        }
         return Copy.dataAsOf(publishedAt: publishedAtDisplay)
+    }
+
+    /// The days the published programme covers, for bounding the date picker.
+    var coverageRange: ClosedRange<Date>? {
+        guard let c = snapshot?.index.coverage, c.from <= c.to else { return nil }
+        return c.from...c.to
     }
 
     /// The snapshot's publication date, formatted dd/MM/yyyy for display.
