@@ -138,7 +138,8 @@ def ingest(root: Path) -> int:
         quarantine.extend(parsed.quarantine)
         statuses.append(
             decide_region_status(region, len(parsed.checks), previous.get(region),
-                                 quarantined=len(parsed.quarantine))
+                                 quarantined=len(parsed.quarantine),
+                                 confirmed_empty=parsed.confirmed_empty)
         )
         if parsed.checks:
             all_checks.extend(parsed.checks)

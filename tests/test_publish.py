@@ -89,3 +89,30 @@ def test_latest_is_replaced_not_merged(tmp_path):
     stale_marker.write_text("{}")
     write_snapshot(tmp_path, "2026-W34", base)
     assert not stale_marker.exists()
+
+
+def test_a_region_that_publishes_a_zero_is_empty_not_failed():
+    """Molise publishes 'Servizi di controllo velocita non programmati nella
+    settimana'. That is information, not a failure to read."""
+    status = decide_region_status("Molise", parsed_rows=0, previous=None,
+                                  confirmed_empty=True, now="2026-08-13T06:00:00Z")
+    assert status.status == "empty"
+    assert status.rows == 0
+
+
+def test_an_unreadable_region_with_no_history_is_still_failed():
+    status = decide_region_status("Sicilia", parsed_rows=0, previous=None,
+                                  confirmed_empty=False)
+    assert status.status == "failed"
+
+
+def test_a_confirmed_zero_does_not_resurrect_last_week_as_stale():
+    """A region that says 'none this week' must show this week's zero, not
+    last week's rows dressed up as current."""
+    previous = {"status": "ok", "updated_at": "2026-08-06T06:00:00Z", "rows": 5,
+                "quarantined": 0}
+    status = decide_region_status("Molise", parsed_rows=0, previous=previous,
+                                  confirmed_empty=True, now="2026-08-13T06:00:00Z")
+    assert status.status == "empty"
+    assert status.rows == 0
+    assert status.updated_at == "2026-08-13T06:00:00Z"

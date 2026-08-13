@@ -41,10 +41,23 @@ def decide_region_status(
     previous: dict | None,
     quarantined: int = 0,
     now: str | None = None,
+    confirmed_empty: bool = False,
 ) -> RegionStatus:
+    """Four outcomes, and the difference between the last two is the point.
+
+    ok      - rows were published
+    empty   - the document was read and states there are no checks this week
+    stale   - nothing parsed, but a previous good week is being retained
+    failed  - nothing parsed and nothing to fall back on: we do not know
+
+    'empty' is information the police published. 'failed' is our ignorance.
+    Collapsing them would let a broken feed look like a quiet week.
+    """
     stamp = now or utc_now()
     if parsed_rows > 0:
         return RegionStatus(region, "ok", stamp, parsed_rows, quarantined)
+    if confirmed_empty:
+        return RegionStatus(region, "empty", stamp, 0, quarantined)
     if previous:
         return RegionStatus(
             region, "stale", previous["updated_at"], int(previous.get("rows", 0)),

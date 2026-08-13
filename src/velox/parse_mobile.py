@@ -41,6 +41,12 @@ class MobileCheck:
     province: str
 
 
+# Some regions publish an explicit "nothing scheduled" page instead of a table.
+# Verified 2026-08-13: the Molise PDF reads "Servizi di controllo velocità non
+# programmati nella settimana".
+_EXPLICIT_EMPTY = re.compile(r"non\s+programmat[io]\s+nella\s+settimana", re.IGNORECASE)
+
+
 @dataclass
 class MobileParseResult:
     region: str
@@ -48,6 +54,12 @@ class MobileParseResult:
     valid_to: str | None = None
     checks: list[MobileCheck] = field(default_factory=list)
     quarantine: list[dict] = field(default_factory=list)
+    confirmed_empty: bool = False
+    """True when the document was read successfully and says there are no checks.
+
+    This is NOT the same as parsing nothing. 'We could not read it' and 'the
+    police published a zero' must never render the same way to a driver: the
+    first is missing data, the second is information."""
 
 
 def pdf_to_text(pdf_bytes: bytes) -> str:
@@ -74,6 +86,10 @@ def _validity(text: str) -> tuple[str | None, str | None]:
 def parse_mobile(region: str, text: str) -> MobileParseResult:
     result = MobileParseResult(region=region)
     result.valid_from, result.valid_to = _validity(text)
+    # A readable validity header, or an explicit statement, both confirm a zero.
+    result.confirmed_empty = bool(
+        _EXPLICIT_EMPTY.search(text) or result.valid_from is not None
+    )
 
     current_date: str | None = None
     for line in text.splitlines():
