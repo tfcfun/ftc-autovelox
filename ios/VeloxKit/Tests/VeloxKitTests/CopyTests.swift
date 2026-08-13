@@ -16,6 +16,7 @@ final class CopyTests: XCTestCase {
             Copy.mitSearchPrompt,
             Copy.mitNoMatch,
             Copy.stretchEntryAlert(road: "A4"),
+            Copy.appPurpose,
         ]
     }
 

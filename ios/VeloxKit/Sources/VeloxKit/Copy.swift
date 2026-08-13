@@ -87,3 +87,11 @@ public extension Copy {
         "Tratto con controllo velocità su \(road) — rispetta il limite."
     }
 }
+
+public extension Copy {
+    /// What the app is, in one sentence, in the user's own words.
+    static let appPurpose = """
+        Scarica e legge automaticamente le pubblicazioni della Polizia di Stato \
+        sui controlli di velocità, così non devi cercarle sul sito.
+        """
+}

@@ -7,6 +7,17 @@ struct InfoView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("FTC Autovelox")
+                            .font(.headline)
+                        Text(Copy.appPurpose)
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 2)
+                }
+
                 Section("Copertura") {
                     Text(Copy.coverageDisclaimer)
                         .font(.callout)
