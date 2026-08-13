@@ -1,12 +1,169 @@
 {
- "schema_version": 1,
- "generated_at": "2026-08-13T06:00:00Z",
- "week": "2026-W33",
- "files": {},
- "regions": {
-  "Lombardia": {"status": "ok", "updated_at": "2026-08-13T06:00:00Z", "rows": 3, "quarantined": 0},
-  "Sicilia": {"status": "stale", "updated_at": "2026-08-06T06:00:00Z", "rows": 5, "quarantined": 0}
+ "files": {
+  "fixed_cameras.json": {
+   "count": 55,
+   "sha256": "9aa74f53c589ef5ecf5ed76006a9845baedd870e6834e74dc8fd0d0373b319c1"
+  },
+  "mit_devices.json": {
+   "count": 4110,
+   "sha256": "05b033f950c086ac6030f8b7c54847712e217ffc5beb07d3dd7b6c8240e05b43"
+  },
+  "mobile_checks.json": {
+   "count": 134,
+   "sha256": "aad9083c76572f391a1efa3f40f58eba660862bb43f7f829c56f29f009b8ca71"
+  },
+  "quarantine.json": {
+   "count": 2,
+   "sha256": "56cac630896d2ebd4eca088c181d98d24586debfc17005947bbab50bd9828ed8"
+  },
+  "road_segments.json": {
+   "count": 45,
+   "sha256": "90345b634bc173e4dfc9c909dcb005557a9707ed6593f87f3ea1c5715d6a95bf"
+  }
  },
- "sources": {},
- "quarantine_count": 0
+ "generated_at": "2026-08-13T00:27:39Z",
+ "quarantine_count": 2,
+ "regions": {
+  "Abruzzo": {
+   "quarantined": 0,
+   "rows": 21,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:35Z"
+  },
+  "Basilicata": {
+   "quarantined": 0,
+   "rows": 14,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:35Z"
+  },
+  "Calabria": {
+   "quarantined": 0,
+   "rows": 4,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:35Z"
+  },
+  "Campania": {
+   "quarantined": 0,
+   "rows": 0,
+   "status": "empty",
+   "updated_at": "2026-08-13T00:26:35Z"
+  },
+  "Emilia": {
+   "quarantined": 0,
+   "rows": 5,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:35Z"
+  },
+  "Friuli": {
+   "quarantined": 0,
+   "rows": 4,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:35Z"
+  },
+  "Lazio": {
+   "quarantined": 0,
+   "rows": 5,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:36Z"
+  },
+  "Liguria": {
+   "quarantined": 0,
+   "rows": 5,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:36Z"
+  },
+  "Lombardia": {
+   "quarantined": 0,
+   "rows": 3,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:36Z"
+  },
+  "Marche": {
+   "quarantined": 0,
+   "rows": 24,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:36Z"
+  },
+  "Molise": {
+   "quarantined": 0,
+   "rows": 0,
+   "status": "empty",
+   "updated_at": "2026-08-13T00:26:36Z"
+  },
+  "Piemonte": {
+   "quarantined": 0,
+   "rows": 7,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:37Z"
+  },
+  "Puglia": {
+   "quarantined": 0,
+   "rows": 6,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:37Z"
+  },
+  "Sardegna": {
+   "quarantined": 0,
+   "rows": 7,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:37Z"
+  },
+  "Sicilia": {
+   "quarantined": 0,
+   "rows": 15,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:37Z"
+  },
+  "Toscana": {
+   "quarantined": 0,
+   "rows": 6,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:37Z"
+  },
+  "Trentino": {
+   "quarantined": 0,
+   "rows": 0,
+   "status": "empty",
+   "updated_at": "2026-08-13T00:26:37Z"
+  },
+  "Umbria": {
+   "quarantined": 0,
+   "rows": 2,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:38Z"
+  },
+  "Valle d'Aosta": {
+   "quarantined": 0,
+   "rows": 0,
+   "status": "empty",
+   "updated_at": "2026-08-13T00:26:38Z"
+  },
+  "Veneto": {
+   "quarantined": 0,
+   "rows": 6,
+   "status": "ok",
+   "updated_at": "2026-08-13T00:26:38Z"
+  }
+ },
+ "schema_version": 1,
+ "sources": {
+  "mit": {
+   "count": 4110,
+   "fetched_at": "2026-08-13T00:27:39Z"
+  },
+  "polizia_fixed_auto": {
+   "fetched_at": "2026-08-13T00:27:39Z",
+   "url": "https://www.poliziadistato.it/statics/96/mvpostazionefissaaut_07102025.pdf"
+  },
+  "polizia_fixed_ord": {
+   "fetched_at": "2026-08-13T00:27:39Z",
+   "url": "https://www.poliziadistato.it/statics/86/mvpostazionefissaord_27082021.pdf"
+  },
+  "polizia_mobile": {
+   "fetched_at": "2026-08-13T00:27:39Z",
+   "valid_from": "2026-08-10",
+   "valid_to": "2026-08-16"
+  }
+ },
+ "week": "2026-W33"
 }

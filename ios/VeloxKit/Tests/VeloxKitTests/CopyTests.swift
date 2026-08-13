@@ -10,6 +10,11 @@ final class CopyTests: XCTestCase {
             Copy.emptyState(publishedAt: "10/08/2026"),
             Copy.coverageDisclaimer,
             Copy.stalenessBanner(days: 9),
+            Copy.regionUnavailable(region: "Sicilia"),
+            Copy.noFixedInstallations,
+            Copy.mitRegisterExplainer(deviceCount: 4110),
+            Copy.mitSearchPrompt,
+            Copy.mitNoMatch,
         ]
     }
 

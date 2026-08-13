@@ -39,3 +39,40 @@ public enum Copy {
         "Dati non aggiornati da \(days) giorni. Controlla la connessione."
     }
 }
+
+public extension Copy {
+    /// A region whose feed we could not read. Distinct from a published zero.
+    static func regionUnavailable(region: String) -> String {
+        """
+        Dati non disponibili per \(region) in questa settimana. \
+        Non è possibile sapere quali controlli siano previsti.
+        """
+    }
+
+    /// Shown when a region has no fixed installations in the published list.
+    /// Qualified, because the app only ever knows about Polizia Stradale ones.
+    static let noFixedInstallations = """
+        Nessuna postazione fissa della Polizia Stradale in questa regione. \
+        Gli autovelox comunali non sono inclusi in questo elenco.
+        """
+
+    static func mitRegisterExplainer(deviceCount: Int) -> String {
+        """
+        Il MIT pubblica l'elenco dei dispositivi di rilevamento della velocità \
+        censiti: \(deviceCount) al momento dell'ultimo aggiornamento. \
+        Dal 28 novembre 2025 solo i dispositivi censiti possono elevare sanzioni.
+        """
+    }
+
+    static let mitSearchPrompt = """
+        Cerca il dispositivo indicato sul verbale, per ente, marca, modello o \
+        numero di matricola.
+        """
+
+    /// Deliberately reports only what was searched, never a legal conclusion.
+    static let mitNoMatch = """
+        Nessun dispositivo corrispondente nell'elenco del MIT. \
+        Questo non significa che la sanzione sia invalida: verifica i dati \
+        trascritti dal verbale, l'ente potrebbe averlo registrato diversamente.
+        """
+}
