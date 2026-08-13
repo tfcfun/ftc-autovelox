@@ -112,6 +112,33 @@ def _consensus_ref(elements: list[dict]) -> str | None:
     return refs.pop() if len(refs) == 1 else None
 
 
+def _ways(elements: list[dict], max_points: int = 400) -> list[list[list[float]]]:
+    """The road stretches themselves, as [lon, lat] polylines.
+
+    This is the honest representation of what we know. The PDFs give a road, a
+    comune and usually a direction, but never a coordinate - so the camera is
+    somewhere along these stretches, not at any one point. Keeping the shape
+    lets the app show the area of uncertainty instead of a pin that claims a
+    precision the source does not contain.
+    """
+    lines: list[list[list[float]]] = []
+    budget = max_points
+    for element in elements:
+        nodes = element.get("geometry") or []
+        if len(nodes) < 2:
+            continue
+        # Thin long ways rather than dropping them; the shape matters, not every vertex.
+        step = max(1, len(nodes) // 40)
+        line = [[n["lon"], n["lat"]] for n in nodes[::step]]
+        if len(line) < 2:
+            continue
+        lines.append(line)
+        budget -= len(line)
+        if budget <= 0:
+            break
+    return lines
+
+
 def _centroid(elements: list[dict]) -> tuple[float, float] | None:
     points = [
         (node["lon"], node["lat"])
@@ -134,7 +161,11 @@ def locate(
     cache_dir: Path = CACHE_DIR,
     client: Callable[[str], dict] | None = None,
 ) -> dict | None:
-    """Return {"ref": str|None, "lon": float, "lat": float} or None.
+    """Return {"ref", "lon", "lat", "ways"} or None.
+
+    "ways" holds the road stretches inside the comune - the area within which the
+    camera actually sits. "lon"/"lat" remain as a coarse centre for map framing
+    only, never as a claim about where the camera is.
 
     None means OSM had nothing to say; the camera stays unplaced rather than
     being pinned somewhere plausible.
@@ -171,6 +202,11 @@ def locate(
         # an empty result, and caching it would blind us to this comune forever.
         return None
 
-    result = {"ref": _consensus_ref(elements), "lon": centre[0], "lat": centre[1]}
+    result = {
+        "ref": _consensus_ref(elements),
+        "lon": centre[0],
+        "lat": centre[1],
+        "ways": _ways(elements),
+    }
     path.write_text(json.dumps(result))
     return result

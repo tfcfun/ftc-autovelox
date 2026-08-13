@@ -1,10 +1,19 @@
-"""Place a fixed camera from its road and kilometre.
+"""Locate a fixed camera as precisely as the source actually allows.
 
-Italian kilometre posts count from historical road origins, which do not always
-coincide with the start of the OSM way. Interpolation is therefore marked
-"medium" confidence and every point is reviewed by hand once (see review/index.html)
-before being marked verified. A camera that cannot be placed keeps null
-coordinates and is excluded from proximity alerts by the app.
+The source never gives a coordinate. It gives a road, a kilometre, a comune and
+usually a direction. So there are two honest outcomes:
+
+* A usable road reference plus a kilometre lets us interpolate an actual point.
+  Marked "medium" - Italian kilometre posts count from historical origins that
+  do not always coincide with the start of the OSM way.
+
+* Otherwise we know the camera is somewhere along the roads of its class inside
+  its comune. That is a STRETCH, not a point, and it is published as one in
+  `uncertainty_ways`. Drawing a pin there would claim a precision the source does
+  not contain; drawing the stretch says exactly what is known.
+
+`lat`/`lon` on a stretch-located camera exist only to frame the map. Nothing
+should treat them as the camera's position.
 """
 
 from __future__ import annotations
@@ -68,6 +77,8 @@ def geocode(camera: FixedCamera, *, cache_dir: Path, ref_override: str | None = 
         "geocode_method": "none",
         "geocode_confidence": "none",
         "verified": False,
+        # The stretches the camera sits somewhere along. Empty when unknown.
+        "uncertainty_ways": [],
     }
 
     if resolved_ref and camera.km is not None:
@@ -88,7 +99,9 @@ def geocode(camera: FixedCamera, *, cache_dir: Path, ref_override: str | None = 
 
     record["road_ref"] = record["road_ref"] or located["ref"]
     record["lon"], record["lat"] = located["lon"], located["lat"]
-    record["geocode_method"] = "comune_road_centroid"
+    record["uncertainty_ways"] = located.get("ways") or []
+    # The point is a map-framing centre, not a claim. The stretches are the claim.
+    record["geocode_method"] = "comune_road_extent"
     record["geocode_confidence"] = "low"
     return record
 
@@ -111,6 +124,6 @@ def geocode_stub(camera: FixedCamera) -> dict:
         "km_raw": camera.km_raw, "km": camera.km,
         "direction_raw": camera.direction_raw, "bearing_deg": camera.bearing_deg,
         "comune": camera.comune, "province": camera.province,
-        "lat": None, "lon": None,
+        "lat": None, "lon": None, "uncertainty_ways": [],
         "geocode_method": "failed", "geocode_confidence": "none", "verified": False,
     }
