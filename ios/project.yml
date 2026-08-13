@@ -30,6 +30,9 @@ targets:
         NSLocationWhenInUseUsageDescription: >-
           Serve a segnalarti i controlli di velocità pubblicati dalla Polizia
           Stradale lungo il percorso, solo mentre la modalità viaggio è attiva.
+        # The app's only cryptography is HTTPS via URLSession, which is exempt.
+        # Declaring it here means App Store Connect stops asking on every upload.
+        ITSAppUsesNonExemptEncryption: false
         UIBackgroundModes:
           - location
         UISupportedInterfaceOrientations:
