@@ -6,3 +6,4 @@ work/
 ios/VeloxKit/.build/
 ios/build/
 ios/VeloxItalia.xcodeproj/
+ios/VeloxKit/.swiftpm/
