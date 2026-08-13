@@ -15,7 +15,7 @@ final class SnapshotProvider {
     private(set) var didRefreshFail = false
 
     private let remoteBase = URL(string:
-        "https://tfcfun.github.io/velox-italia/data/latest/")!
+        "https://tfcfun.github.io/ftc-autovelox/data/latest/")!
 
     private var cacheDirectory: URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory,

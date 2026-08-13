@@ -44,18 +44,14 @@ how the screenshots were captured without driving the UI.
    company name. For an app about speed enforcement that is worth a moment's
    thought. Nothing in the code depends on it.
 2. **Signing, TestFlight, submission.** Needs your Apple ID interactively.
-3. **The coordinate review pass.** 54 cameras are placed from their comune and
-   are accurate to roughly 1–2 km. Open `review/index.html` against
-   `data/latest/`, drag each pin onto the real installation, and set
-   `verified: true`. **Until you do, none of them fire proximity alerts** — the
-   app only warns on points a human confirmed. This is the single highest-value
-   hour you can spend on the project.
-4. **GitHub Pages.** Deliberately left OFF. The repo is private. Turning Pages
-   on publishes the data at a public URL, which is your call, not mine. The app
-   reads `https://tfcfun.github.io/velox-italia/data/latest/`, so the
-   remote refresh does nothing until you enable it — the bundled seed covers the
-   app in the meantime.
-5. **CC BY-NC-ND.** The Polizia di Stato site carries that notice. A free app
+3. **Real-road testing.** The in-car feel of the stretch alerts is the one thing
+   no test here can establish. Everything else is covered; this is not.
+
+   There is no manual coordinate review to do. An earlier design placed each
+   camera as a point and required a human to confirm 54 guesses; that was
+   replaced by publishing the stretch the camera sits along, which is what the
+   sources actually support. Nothing is blocked on hand-verification.
+4. **CC BY-NC-ND.** The Polizia di Stato site carries that notice. A free app
    and raw facts are a comfortable position, but worth a look before you publish
    under your own name.
 
@@ -104,7 +100,7 @@ Recorded because the mistakes are more useful than the successes.
 - **`Meseno` (MI) is unplaceable.** There is no such comune — the official PDF
   misprints `Mesero`. It is left unplaced rather than silently corrected;
   inventing a fix to official data is not the pipeline's job. It will show on
-  the review page.
+  the map as unlocated.
 - **`SP656/CH` and `SS277/FR` have no OSM geometry.** Genuinely absent, not
   rate-limited. Those checks appear in the region browse but cannot match a
   route. Empty results are never cached, so they retry every run — if they stay

@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 
 import requests
 
-USER_AGENT = "velox-italia/0.1 (+https://github.com/tfcfun/velox-italia)"
+USER_AGENT = "velox-italia/0.1 (+https://github.com/tfcfun/ftc-autovelox)"
 
 
 def utc_now() -> str:
