@@ -47790,21 +47790,6 @@
   "versione": "HD"
  },
  {
-  "codice_accertatore": "PVCNP200",
-  "codice_catastale": "D205",
-  "data_decreto": "2021-08-16",
-  "ente": "Provincia di Cuneo",
-  "id": 15956,
-  "marca": "EngiNe S.p.A. 53040 Rapolano Terme (SI)",
-  "matricola": "0x0004403E fino al 29/1/26, 0x000A2D3 dal 2/2/26",
-  "modello": "CELERITAS MVD 2020",
-  "n_decreto": "349",
-  "note": "Versione dispositivo con IA su chip di accelerazione neurale su sistema di elaborazione VistaEnVES09-4KM-CTX",
-  "tipo": "sconosciuto",
-  "tipo_raw": "Apparato rilevamento velocità istantanea",
-  "versione": "ENG AI Classifier release 1.1.0"
- },
- {
   "codice_accertatore": "CMPGP225",
   "codice_catastale": "B609",
   "data_decreto": "2010-12-30",
@@ -61624,7 +61609,7 @@
   "codice_catastale": "E132",
   "data_decreto": null,
   "ente": "GRAGNANO TREBBIENSE POLIZIA LOCALE",
-  "id": 17006,
+  "id": 17008,
   "marca": "SAFETY21 SPA",
   "matricola": "16340",
   "modello": "AGUIA Red & Speed",
@@ -61639,14 +61624,29 @@
   "codice_catastale": "E132",
   "data_decreto": null,
   "ente": "GRAGNANO TREBBIENSE POLIZIA LOCALE",
-  "id": 17007,
+  "id": 17009,
   "marca": "ELTRAFF Srl",
   "matricola": "TC009979",
   "modello": "Telelaser TruCam",
   "n_decreto": "242",
-  "note": "Decreto Dirigenziale 3248 del 13.06.2011",
+  "note": "apparecchiatura omologata ai sensi dell' art. 6, comma 1, del Decreto Ministeriale n. 125/2026 del MIT",
   "tipo": "mobile",
   "tipo_raw": "Telelaser mobile",
   "versione": "TruCam HD"
+ },
+ {
+  "codice_accertatore": "PVCNP200",
+  "codice_catastale": "D205",
+  "data_decreto": "2021-08-16",
+  "ente": "Provincia di Cuneo",
+  "id": 17010,
+  "marca": "EngiNe S.p.A. 53040 Rapolano Terme (SI)",
+  "matricola": "0x0004403E fino al 29/1/26,0x0003A2D3 dal 2/2/26",
+  "modello": "CELERITAS MVD 2020",
+  "n_decreto": "349",
+  "note": "Versione dispositivo con IA su chip di accelerazione neurale su sistema di elaborazione VistaEnVES09-4KM-CTX",
+  "tipo": "sconosciuto",
+  "tipo_raw": "Apparato rilevamento velocità istantanea",
+  "versione": "ENG AI Classifier release 1.1.0"
  }
 ]
