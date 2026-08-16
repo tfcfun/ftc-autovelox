@@ -32,6 +32,33 @@ Target audience: drivers in Italy. The app is in Italian.
 The framing throughout is road safety. Every alert refers to respecting the
 speed limit, never to avoiding a fine.
 
+IMPORTANT — HOW TO EVALUATE THIS APP FROM OUTSIDE ITALY
+
+The app's content covers Italian roads only, because the source publications are
+issued by the Italian State Police. When the app is opened from outside Italy —
+for example from a review location in the United States — any feature that
+depends on the device's current position will correctly show that there is
+nothing nearby. That is the expected and intended behaviour, not a fault, and we
+suspect it is why the app was difficult to evaluate.
+
+Every feature can be exercised fully from anywhere in the world without being in
+Italy, as follows:
+
+- REGIONE tab: choose "Lombardia". This shows the real published data for the
+  current week with no location involved. This is the fastest way to see that
+  the app works.
+- PERCORSO tab: TYPE two Italian towns, for example "Milano" and "Bologna", and
+  tap "Calcola". The route and any published checks along it are computed for
+  those places regardless of where the device is. Do not use the "Usa la mia
+  posizione" button when outside Italy, as it will correctly fill in your actual
+  location.
+- MULTA tab: type "Autovelox" to search the Ministry device register. No
+  location involved.
+- INFO tab: "Prova avviso vocale" plays a sample spoken alert so the audio
+  behaviour can be verified anywhere.
+- The location permission prompt appears when "Modalità viaggio" or "Modalità
+  live" is started, from any location.
+
 4. HOW TO SET UP AND USE THE MAIN FEATURES
 
 No account, no login, no credentials, no sample files are required. The app
