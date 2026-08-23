@@ -1,9 +1,57 @@
 # Reply to App Review — Guideline 2.1, Information Needed
 
-Submission ID 9c3d94e1-7a73-41c1-987f-781cb3798dd0. Answers items 2–7; item 1
-(the screen recording) is captured on a physical device and attached separately.
+Submission ID 9c3d94e1-7a73-41c1-987f-781cb3798dd0.
+
+**PASTE EVERYTHING BELOW THE RULE INTO THE RESOLUTION CENTER.** Attach the screen
+recording to the same reply. Do not send answers 2–7 without the video, and do not
+send the video without answers 2–7 — a partial reply is what left this submission
+at Unresolved Issues from 16 to 23 August.
 
 ---
+
+1. SCREEN RECORDING
+
+Attached: a screen recording captured on a physical iPhone 17 Pro Max running
+iOS 26.5, from a TestFlight install of build 0.1(2). It begins with launching the
+app and follows the typical user flow through every core feature.
+
+Of the four categories listed in your request, only one applies to this app:
+
+- Account registration, login, account deletion — **not applicable.** The app has
+  no accounts and no login of any kind.
+- Paid content, purchases, subscriptions — **not applicable.** The app is free and
+  contains no purchases or subscriptions.
+- User-generated content — **not applicable.** Users cannot submit, report or
+  block content. All data comes from official publications; there is no user
+  contribution mechanism, by design.
+- **Prompts requesting access to sensitive data or device capabilities —
+  included.** The recording shows the location permission prompt appearing when
+  "Modalità viaggio" is started, and the permission being granted, on camera.
+
+The recording was made in Italy, so it also shows the app doing what it cannot
+demonstrate from a review location outside Italy: resolving a real current
+position, and reporting the distance to the next published speed check ahead on
+the road. Please see the note under item 3 on evaluating the app from outside
+Italy — we believe that is why the app was difficult to assess.
+
+Index of the recording:
+
+    0:00  Launch from a closed state — no account, no setup, no credentials
+    0:xx  PERCORSO — departure filled from the device's real location in Italy
+    0:xx  Modalità viaggio — LOCATION PERMISSION PROMPT, granted on camera
+    0:xx  Live map, next published check ahead with distance
+    0:xx  MULTA — search of the Ministry device register
+    0:xx  INFO — sources, coverage limits, current data week, sample spoken alert
+    0:xx  Modalità live — works without a route
+    0:xx  REGIONE — real published data with Airplane Mode ON (ships offline)
+
+The app's location purpose string, shown in the prompt, reads:
+
+    "Serve a segnalarti i controlli di velocità pubblicati dalla Polizia
+     Stradale lungo il percorso, solo mentre la modalità viaggio è attiva."
+
+("Used to alert you to the speed checks published by the Polizia Stradale along
+your route, only while trip mode is active.")
 
 2. DEVICE MODELS AND OPERATING SYSTEMS TESTED
 
