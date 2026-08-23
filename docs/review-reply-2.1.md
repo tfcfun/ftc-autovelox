@@ -25,8 +25,22 @@ Of the four categories listed in your request, only one applies to this app:
   block content. All data comes from official publications; there is no user
   contribution mechanism, by design.
 - **Prompts requesting access to sensitive data or device capabilities —
-  included.** The recording shows the location permission prompt appearing when
-  "Modalità viaggio" is started, and the permission being granted, on camera.
+  included, with one limitation we want to flag honestly.** The app was deleted
+  and reinstalled from TestFlight immediately before recording, so this is a
+  genuine first launch with no prior permission granted. At **0:16** the
+  recording shows the app requesting location: the screen dims and the control
+  shows its loading state while the system alert is presented, and immediately
+  afterwards the departure field is populated from the device's position, which
+  is only possible once the request was granted.
+
+  **The system alert itself does not appear in the video because iOS does not
+  include system permission dialogs in screen recordings** — they are rendered
+  outside the app's window. This is a platform limitation, not an omission. If a
+  recording of the dialog itself is required, we can film the device screen with
+  a second camera and send that; please just ask.
+
+  For completeness, the location purpose string presented in that alert is quoted
+  at the end of this item.
 
 The recording was made in Italy, so it also shows the app doing what it cannot
 demonstrate from a review location outside Italy: resolving a real current
@@ -34,16 +48,17 @@ position, and reporting the distance to the next published speed check ahead on
 the road. Please see the note under item 3 on evaluating the app from outside
 Italy — we believe that is why the app was difficult to assess.
 
-Index of the recording:
+Index of the recording (1:57 total):
 
-    0:00  Launch from a closed state — no account, no setup, no credentials
-    0:xx  PERCORSO — departure filled from the device's real location in Italy
-    0:xx  Modalità viaggio — LOCATION PERMISSION PROMPT, granted on camera
-    0:xx  Live map, next published check ahead with distance
-    0:xx  MULTA — search of the Ministry device register
-    0:xx  INFO — sources, coverage limits, current data week, sample spoken alert
-    0:xx  Modalità live — works without a route
-    0:xx  REGIONE — real published data with Airplane Mode ON (ships offline)
+    0:00  Launch from a closed state, fresh TestFlight install — no account,
+          no login, no setup, no credentials, no sample files
+    0:16  Location requested on first use (see the note above)
+    0:20  PERCORSO — departure filled from the device's real position in Italy
+    0:52  REGIONE (Liguria) — the week's published checks, and a region with no
+          fixed installations stated explicitly as such
+    1:08  MULTA — search of the Ministry register of approved devices
+    1:20  INFO — sources, coverage limits, current data week (2026-W34), and the
+          sample spoken alert (audible)
 
 The app's location purpose string, shown in the prompt, reads:
 
