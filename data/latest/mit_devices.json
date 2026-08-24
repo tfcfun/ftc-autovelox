@@ -31935,21 +31935,6 @@
   "versione": "Non presente"
  },
  {
-  "codice_accertatore": "CMTOP395",
-  "codice_catastale": "M004",
-  "data_decreto": "2014-08-06",
-  "ente": "Polizia Locale Villareggia",
-  "id": 6421,
-  "marca": "Sodi Scientifica",
-  "matricola": "958769",
-  "modello": "Autovelox 106",
-  "n_decreto": "3758",
-  "note": "NOLEGGIO",
-  "tipo": "mobile",
-  "tipo_raw": "MOBILE-rilevatore di velocità in mod.istantanea",
-  "versione": "non presente"
- },
- {
   "codice_accertatore": "CMSAP010",
   "codice_catastale": "G834",
   "data_decreto": "2018-01-17",
@@ -61543,5 +61528,35 @@
   "tipo": "fisso",
   "tipo_raw": "FISSO",
   "versione": "VERS-EVO-T12-5-RS4"
+ },
+ {
+  "codice_accertatore": "CMTOP395",
+  "codice_catastale": "M004",
+  "data_decreto": "2025-12-09",
+  "ente": "Polizia Locale Villareggia",
+  "id": 17111,
+  "marca": "Sodi Scientifica",
+  "matricola": "958769",
+  "modello": "Autovelox 106",
+  "n_decreto": "476",
+  "note": "NOLEGGIO",
+  "tipo": "sconosciuto",
+  "tipo_raw": "rilevatore di velocità in modalità istantanea",
+  "versione": "106"
+ },
+ {
+  "codice_accertatore": "CMTOP395",
+  "codice_catastale": "M004",
+  "data_decreto": "2026-02-17",
+  "ente": "Polizia Locale Villareggia",
+  "id": 17112,
+  "marca": "Eltraff",
+  "matricola": "7209-7255",
+  "modello": "Velomatic",
+  "n_decreto": "39",
+  "note": "NOLEGGIO",
+  "tipo": "sconosciuto",
+  "tipo_raw": "rilevatore di velocità in modalità istantanea",
+  "versione": "512D"
  }
 ]
