@@ -2,7 +2,13 @@ name: ingest
 
 on:
   schedule:
-    - cron: "0 6 * * 1"   # Mondays 06:00 UTC, when the weekly PDFs are republished
+    # The Polizia republish the weekly PDFs at a variable time on Monday
+    # morning, not at a fixed hour: on 2026-08-17 the 07:57 UTC run still read
+    # the previous week, on 2026-08-24 they had turned over by 07:54. Retry
+    # across the morning instead of betting on one hour -- until they turn over,
+    # data/latest holds an expired programme, and the app (which clamps its date
+    # picker to the published validity window) can only offer days up to Sunday.
+    - cron: "0 6-16 * * 1"
     - cron: "0 7 * * *"   # daily retry, so a Monday failure does not cost a week
   workflow_dispatch:
 
