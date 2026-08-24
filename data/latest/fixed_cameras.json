@@ -28110,7 +28110,7 @@
   "comune": "Meseno",
   "direction_raw": "Est",
   "geocode_confidence": "none",
-  "geocode_method": "failed",
+  "geocode_method": "none",
   "id": "fx-ordi-Meseno-33700-est",
   "km": 33.7,
   "km_raw": "33+700",
