@@ -28965,51 +28965,6 @@
   "versione": "512D"
  },
  {
-  "codice_accertatore": "CMVEP004",
-  "codice_catastale": "H823",
-  "data_decreto": "2011-06-13",
-  "ente": "Polizia Locale comune di San Donà di Piave",
-  "id": 5288,
-  "marca": "ELTRAFF",
-  "matricola": "TC004737",
-  "modello": "TELELASER",
-  "n_decreto": "3248",
-  "note": "",
-  "tipo": "mobile",
-  "tipo_raw": "MOBILE",
-  "versione": "TRUCAM"
- },
- {
-  "codice_accertatore": "CMVEP004",
-  "codice_catastale": "H823",
-  "data_decreto": "2023-07-11",
-  "ente": "Polizia Locale comune di San Donà di Piave",
-  "id": 5289,
-  "marca": "SAFETY21 S.P.A.",
-  "matricola": "709",
-  "modello": "VRS EVO 2",
-  "n_decreto": "271",
-  "note": "Dec.sub.tit.n.227_04/07/2025 sr 43 11+480 JESOLO",
-  "tipo": "fisso",
-  "tipo_raw": "FISSO",
-  "versione": "VERS-EVO-T12-5-RS4"
- },
- {
-  "codice_accertatore": "CMVEP004",
-  "codice_catastale": "H823",
-  "data_decreto": "2012-03-08",
-  "ente": "Polizia Locale comune di San Donà di Piave",
-  "id": 5290,
-  "marca": "SINTEL Italia S.p.A.",
-  "matricola": "4435",
-  "modello": "Scout Speed",
-  "n_decreto": "1323",
-  "note": "",
-  "tipo": "mobile",
-  "tipo_raw": "MOBILE",
-  "versione": "SCOUT IIS"
- },
- {
   "codice_accertatore": "CMUDP252",
   "codice_catastale": "E-833",
   "data_decreto": "2010-12-30",
@@ -61558,5 +61513,35 @@
   "tipo": "sconosciuto",
   "tipo_raw": "Autovelox",
   "versione": "Autovelox 106"
+ },
+ {
+  "codice_accertatore": "CMVEP004",
+  "codice_catastale": "H823",
+  "data_decreto": "2011-06-13",
+  "ente": "Polizia Locale comune di San Donà di Piave",
+  "id": 17109,
+  "marca": "ELTRAFF",
+  "matricola": "TC004737",
+  "modello": "TELELASER",
+  "n_decreto": "3248",
+  "note": "OMOLOGAZIONE ai sensi dell'art.  6 comma 1 del D.M. n. 125/2026 del MIT",
+  "tipo": "mobile",
+  "tipo_raw": "MOBILE",
+  "versione": "TRUCAM"
+ },
+ {
+  "codice_accertatore": "CMVEP004",
+  "codice_catastale": "H823",
+  "data_decreto": "2023-07-11",
+  "ente": "Polizia Locale comune di San Donà di Piave",
+  "id": 17110,
+  "marca": "SAFETY21 S.P.A.",
+  "matricola": "709",
+  "modello": "VRS EVO 2",
+  "n_decreto": "271",
+  "note": "Dec.sub.tit.n.227_04/07/2025 SR 43 11+480 JESOLO - OMOLOGAZIONE ai sensi dell'art.  6 comma 1 del D.M. n. 125/2026 del MIT",
+  "tipo": "fisso",
+  "tipo_raw": "FISSO",
+  "versione": "VERS-EVO-T12-5-RS4"
  }
 ]
