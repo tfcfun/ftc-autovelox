@@ -61543,5 +61543,20 @@
   "tipo": "mobile",
   "tipo_raw": "MOBILE",
   "versione": "TRUCAM HD"
+ },
+ {
+  "codice_accertatore": "PVGEP200",
+  "codice_catastale": "PVGEP20001",
+  "data_decreto": "2025-12-09",
+  "ente": "Città Metropolitana di Genova",
+  "id": 17108,
+  "marca": "Sodi Scientifica s.r.l.",
+  "matricola": "953547",
+  "modello": "Autovelox 106",
+  "n_decreto": "476",
+  "note": "",
+  "tipo": "sconosciuto",
+  "tipo_raw": "Autovelox",
+  "versione": "Autovelox 106"
  }
 ]
