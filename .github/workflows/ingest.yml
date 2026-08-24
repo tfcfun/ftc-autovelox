@@ -50,19 +50,37 @@ jobs:
         run: |
           git config user.name "velox-bot"
           git config user.email "velox-bot@users.noreply.github.com"
-          git add data cache
-          if git diff --staged --quiet; then
-            echo "no change to publish"
-            exit 0
-          fi
-          git commit -m "data: snapshot $(date -u +%Y-%m-%d)"
-          # Another run may have pushed while this one was fetching.
+
+          # Another run may have pushed while this one was fetching. Losing that
+          # race is NOT a merge: this snapshot is a pure function of what this
+          # run read from the source, not a patch on top of someone else's
+          # snapshot. Rebasing generated data hits `CONFLICT (add/add)` the first
+          # time two runs create the same brand-new data/<week>/ directory --
+          # which is how the 2026-08-24 run died holding a finished snapshot.
+          # Re-apply this run's own output on the new tip instead. The run that
+          # finishes last wins, because it read the source last.
+          generated=$(mktemp -d)
+          cp -R data cache "$generated"/
+
           for attempt in 1 2 3; do
-            if git push; then
+            git add data cache
+            if git diff --staged --quiet; then
+              echo "no change to publish"
               exit 0
             fi
-            echo "push rejected, rebasing (attempt $attempt)"
-            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || exit 1
+            git commit -m "data: snapshot $(date -u +%Y-%m-%d)"
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              exit 0
+            fi
+            echo "push rejected, re-applying this run's output (attempt $attempt)"
+            git fetch origin "${GITHUB_REF_NAME}"
+            git reset --hard "origin/${GITHUB_REF_NAME}"
+            # Copy INTO the trees rather than replacing them: only the week this
+            # run generated may be overwritten. Older weeks (data/2026-W34, ...)
+            # and anything outside data/ that landed meanwhile must survive.
+            mkdir -p data cache
+            cp -R "$generated"/data/. data/
+            cp -R "$generated"/cache/. cache/
           done
           echo "could not push after 3 attempts"
           exit 1
