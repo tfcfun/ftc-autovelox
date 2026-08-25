@@ -207,8 +207,13 @@ def ingest(root: Path) -> int:
         },
     }
 
-    written = write_snapshot(root, week, payload)
-    print(f"wrote {written}", file=sys.stderr)
+    result = write_snapshot(root, week, payload)
+    if result.changed:
+        print(f"wrote {result.path}", file=sys.stderr)
+    else:
+        # Say so plainly: a silent "wrote" on a run that changed nothing is how
+        # nine identical commits looked like nine publications.
+        print(f"{result.path} already current, nothing rewritten", file=sys.stderr)
     return 0
 
 

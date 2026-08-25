@@ -69,8 +69,9 @@ def test_snapshot_writes_files_index_and_latest(tmp_path):
         "sources": {},
     }
     written = write_snapshot(tmp_path, "2026-W33", payload)
+    assert written.changed is True
 
-    index = json.loads((written / "index.json").read_text())
+    index = json.loads((written.path / "index.json").read_text())
     assert index["schema_version"] == 1
     assert index["week"] == "2026-W33"
     assert index["files"]["fixed_cameras.json"]["count"] == 1
@@ -116,3 +117,94 @@ def test_a_confirmed_zero_does_not_resurrect_last_week_as_stale():
     assert status.status == "empty"
     assert status.rows == 0
     assert status.updated_at == "2026-08-13T06:00:00Z"
+
+
+def _steady_payload(fetched_at: str, updated_at: str, checks=None) -> dict:
+    """A snapshot where only the clocks differ between runs."""
+    return {
+        "fixed_cameras": [{"id": "fx-1", "lat": 45.0, "lon": 9.0}],
+        "mobile_checks": checks if checks is not None else [{"id": "mb-1", "day": "2026-08-26"}],
+        "road_segments": [{"id": "seg-1", "road_ref": "A7", "fetched_at": fetched_at}],
+        "mit_devices": [{"id": 1}],
+        "quarantine": [],
+        "regions": {"Lombardia": {"status": "ok", "updated_at": updated_at,
+                                  "rows": 1, "quarantined": 0}},
+        "sources": {"polizia_mobile": {"fetched_at": fetched_at,
+                                       "valid_from": "2026-08-24",
+                                       "valid_to": "2026-08-30"}},
+    }
+
+
+def _tree(folder: Path) -> dict[str, bytes]:
+    return {p.name: p.read_bytes() for p in sorted(folder.iterdir())}
+
+
+def test_rerun_with_the_same_programme_rewrites_nothing(tmp_path):
+    """A rerun that reads the same programme must leave the bytes alone.
+
+    Every run stamps generated_at / updated_at / fetched_at, and those feed the
+    sha256 digests in index.json, so an unchanged week still produced a diff and
+    the workflow's `no change to publish` guard could never fire. Monday
+    2026-08-24 committed nine times with identical content.
+    """
+    first = write_snapshot(tmp_path, "2026-W35",
+                           _steady_payload("2026-08-24T06:00:00Z", "2026-08-24T06:00:00Z"))
+    assert first.changed is True
+    before = _tree(tmp_path / "2026-W35")
+
+    later = write_snapshot(tmp_path, "2026-W35",
+                           _steady_payload("2026-08-24T16:00:00Z", "2026-08-24T16:00:00Z"))
+
+    assert later.changed is False, "only the clocks moved; there is nothing to publish"
+    assert _tree(tmp_path / "2026-W35") == before, "rewrote bytes with no new information"
+    assert _tree(tmp_path / "latest") == before
+
+
+def test_publication_date_is_not_advanced_by_a_rerun(tmp_path, monkeypatch):
+    """generated_at reaches the user as 'Elenco pubblicato il ...'.
+
+    Restamping it on a run that republished nothing would claim a publication
+    that never happened. The clock is driven explicitly here: utc_now() has
+    second resolution, so two writes in the same test would otherwise agree by
+    accident and the test would pass without proving anything.
+    """
+    monkeypatch.setattr("velox.publish.utc_now", lambda: "2026-08-24T06:42:00Z")
+    write_snapshot(tmp_path, "2026-W35",
+                   _steady_payload("2026-08-24T06:00:00Z", "2026-08-24T06:00:00Z"))
+    published = json.loads((tmp_path / "2026-W35" / "index.json").read_text())["generated_at"]
+    assert published == "2026-08-24T06:42:00Z"
+
+    monkeypatch.setattr("velox.publish.utc_now", lambda: "2026-08-25T07:44:00Z")
+    write_snapshot(tmp_path, "2026-W35",
+                   _steady_payload("2026-08-25T07:00:00Z", "2026-08-25T07:00:00Z"))
+    after = json.loads((tmp_path / "2026-W35" / "index.json").read_text())["generated_at"]
+
+    assert after == published, "claimed a publication date for a run that published nothing"
+
+
+def test_a_real_change_still_publishes(tmp_path):
+    """The guard must not swallow an actual change to the programme."""
+    write_snapshot(tmp_path, "2026-W35",
+                   _steady_payload("2026-08-24T06:00:00Z", "2026-08-24T06:00:00Z"))
+
+    result = write_snapshot(
+        tmp_path, "2026-W35",
+        _steady_payload("2026-08-25T07:00:00Z", "2026-08-25T07:00:00Z",
+                        checks=[{"id": "mb-1", "day": "2026-08-26"},
+                                {"id": "mb-2", "day": "2026-08-27"}]),
+    )
+
+    assert result.changed is True
+    index = json.loads((tmp_path / "2026-W35" / "index.json").read_text())
+    assert index["files"]["mobile_checks.json"]["count"] == 2
+    assert json.loads((tmp_path / "latest" / "index.json").read_text())[
+        "files"]["mobile_checks.json"]["count"] == 2
+
+
+def test_a_new_week_always_publishes(tmp_path):
+    write_snapshot(tmp_path, "2026-W35",
+                   _steady_payload("2026-08-24T06:00:00Z", "2026-08-24T06:00:00Z"))
+    result = write_snapshot(tmp_path, "2026-W36",
+                            _steady_payload("2026-08-31T06:00:00Z", "2026-08-31T06:00:00Z"))
+    assert result.changed is True
+    assert json.loads((tmp_path / "latest" / "index.json").read_text())["week"] == "2026-W36"

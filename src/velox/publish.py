@@ -13,6 +13,7 @@ import json
 import shutil
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import NamedTuple
 
 from velox.constants import SCHEMA_VERSION
 from velox.fetch import utc_now
@@ -66,15 +67,69 @@ def decide_region_status(
     return RegionStatus(region, "failed", stamp, 0, quarantined)
 
 
-def _write_json(path: Path, value) -> tuple[str, int]:
-    body = json.dumps(value, ensure_ascii=False, indent=1, sort_keys=True)
-    path.write_text(body, encoding="utf-8")
-    digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
-    count = len(value) if isinstance(value, list) else 1
-    return digest, count
+class SnapshotResult(NamedTuple):
+    """Where the snapshot lives, and whether this run actually changed it."""
+
+    path: Path
+    changed: bool
 
 
-def write_snapshot(root: Path, week: str, payload: dict) -> Path:
+def _dump(value) -> str:
+    return json.dumps(value, ensure_ascii=False, indent=1, sort_keys=True)
+
+
+def _substance(index: dict, bodies: dict) -> str:
+    """What this snapshot SAYS, with the clocks taken out.
+
+    generated_at, a region's updated_at and every fetched_at move on each run
+    even when the Polizia republished nothing, and they feed the sha256 digests
+    in index.json - so comparing raw bytes always reports a change. Monday
+    2026-08-24 committed nine times with byte-different, word-identical content.
+    """
+    trimmed = json.loads(_dump(index))
+    trimmed.pop("generated_at", None)
+    # Digests are derived from the bodies, which are compared here directly.
+    trimmed.pop("files", None)
+    for region in trimmed.get("regions", {}).values():
+        if isinstance(region, dict):
+            region.pop("updated_at", None)
+    for source in trimmed.get("sources", {}).values():
+        if isinstance(source, dict):
+            source.pop("fetched_at", None)
+
+    def without_clocks(rows):
+        if not isinstance(rows, list):
+            return rows
+        return [{k: v for k, v in row.items() if k != "fetched_at"}
+                if isinstance(row, dict) else row for row in rows]
+
+    return _dump({"index": trimmed,
+                  "files": {k: without_clocks(v) for k, v in bodies.items()}})
+
+
+def _substance_on_disk(folder: Path) -> str | None:
+    """The same reading, taken from an already-published snapshot.
+
+    Anything missing or unreadable returns None, which never compares equal, so
+    a damaged snapshot is republished rather than silently kept.
+    """
+    index_path = folder / "index.json"
+    if not index_path.exists():
+        return None
+    try:
+        index = json.loads(index_path.read_text(encoding="utf-8"))
+        bodies = {}
+        for key in _PAYLOAD_FILES:
+            path = folder / f"{key}.json"
+            if not path.exists():
+                return None
+            bodies[key] = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return _substance(index, bodies)
+
+
+def write_snapshot(root: Path, week: str, payload: dict) -> SnapshotResult:
     for key in _REQUIRED_NON_EMPTY:
         if not payload.get(key):
             raise PublicationBlocked(f"refusing to publish: {key} is empty")
@@ -92,33 +147,49 @@ def write_snapshot(root: Path, week: str, payload: dict) -> Path:
 
     root = Path(root)
     target = root / week
-    if target.exists():
-        shutil.rmtree(target)
-    target.mkdir(parents=True)
+    latest = root / "latest"
 
-    files: dict[str, dict] = {}
-    for key in _PAYLOAD_FILES:
-        digest, count = _write_json(target / f"{key}.json", payload.get(key, []))
-        files[f"{key}.json"] = {"sha256": digest, "count": count}
-
+    bodies = {key: payload.get(key, []) for key in _PAYLOAD_FILES}
     index = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": utc_now(),
         "week": week,
-        "files": files,
+        "files": {},
         "regions": payload.get("regions", {}),
         "sources": payload.get("sources", {}),
         "quarantine_count": len(payload.get("quarantine", [])),
     }
-    (target / "index.json").write_text(
-        json.dumps(index, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8"
-    )
 
-    latest = root / "latest"
+    # A run that read the same programme has nothing to publish. Rewriting it
+    # would only restamp the clocks - and generated_at reaches the user as
+    # "Elenco pubblicato il ...", so advancing it would claim a publication
+    # that never happened. Both copies must already agree, or latest could be
+    # left pointing at another week.
+    substance = _substance(index, bodies)
+    if (_substance_on_disk(target) == substance
+            and _substance_on_disk(latest) == substance):
+        return SnapshotResult(target, False)
+
+    rendered = {key: _dump(body) for key, body in bodies.items()}
+    index["files"] = {
+        f"{key}.json": {
+            "sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
+            "count": len(bodies[key]) if isinstance(bodies[key], list) else 1,
+        }
+        for key, body in rendered.items()
+    }
+
+    if target.exists():
+        shutil.rmtree(target)
+    target.mkdir(parents=True)
+    for key, body in rendered.items():
+        (target / f"{key}.json").write_text(body, encoding="utf-8")
+    (target / "index.json").write_text(_dump(index), encoding="utf-8")
+
     if latest.exists():
         shutil.rmtree(latest)
     shutil.copytree(target, latest)
-    return target
+    return SnapshotResult(target, True)
 
 
 def region_statuses_to_dict(statuses: list[RegionStatus]) -> dict:
