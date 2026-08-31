@@ -21345,21 +21345,6 @@
   "versione": "TRUSPEED"
  },
  {
-  "codice_accertatore": "CMNAP203",
-  "codice_catastale": "E131",
-  "data_decreto": null,
-  "ente": "POLIZIA LOCALE COMUNE DI GRAGNANO",
-  "id": 4067,
-  "marca": "ENGINE",
-  "matricola": "SR3075-CC0068LAT",
-  "modello": "CELERITAS EVO 1506",
-  "n_decreto": "244159",
-  "note": "",
-  "tipo": "media",
-  "tipo_raw": "SISTEMA DI MISURA DELLA VELOCITA MEDIA DEI VEICOLI",
-  "versione": "1.2.0 LUGLIO 2021"
- },
- {
   "codice_accertatore": "CMCTP214",
   "codice_catastale": "CMCT0027",
   "data_decreto": "2011-06-13",
@@ -61633,5 +61618,20 @@
   "tipo": "mobile",
   "tipo_raw": "MOBILE",
   "versione": "TRUCAM HD"
+ },
+ {
+  "codice_accertatore": "CMNAP203",
+  "codice_catastale": "E131",
+  "data_decreto": null,
+  "ente": "POLIZIA LOCALE COMUNE DI GRAGNANO",
+  "id": 17201,
+  "marca": "ENGINE",
+  "matricola": "SR3075-CC0068LAT",
+  "modello": "CELERITAS EVO 1506",
+  "n_decreto": "297295",
+  "note": "apparecchiatura omologata ai sensi dell'art. 6, comma 1, del Decreto Ministeriale n. 125/2026 del MIT",
+  "tipo": "media",
+  "tipo_raw": "SISTEMA DI MISURA DELLA VELOCITA MEDIA DEI VEICOLI",
+  "versione": "1.2.0 LUGLIO 2021"
  }
 ]

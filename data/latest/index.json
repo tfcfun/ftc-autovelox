@@ -6,7 +6,7 @@
   },
   "mit_devices.json": {
    "count": 4109,
-   "sha256": "b18a574118c15a0fac13764eb596915557770e99c3faed1216291a0bc1c9f168"
+   "sha256": "c79acbb1c113c3bfe44d4938b022cab0fbbfeb2056b5fde2f6aa74ea8a62c935"
   },
   "mobile_checks.json": {
    "count": 159,
@@ -18,149 +18,149 @@
   },
   "road_segments.json": {
    "count": 52,
-   "sha256": "bcee80cfdcce21a274eb233d8a9e0b773a0862b6bcd2ff8a86895bd7ac9bc82d"
+   "sha256": "07508920769b2e6286ccf3df28e2abecb4d0ecef1a5ca4fd41ec37d8ebf2d4d7"
   }
  },
- "generated_at": "2026-08-31T13:08:55Z",
+ "generated_at": "2026-08-31T19:27:09Z",
  "quarantine_count": 2,
  "regions": {
   "Abruzzo": {
    "quarantined": 0,
    "rows": 21,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:51Z"
+   "updated_at": "2026-08-31T19:24:59Z"
   },
   "Basilicata": {
    "quarantined": 0,
    "rows": 14,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:52Z"
+   "updated_at": "2026-08-31T19:25:00Z"
   },
   "Calabria": {
    "quarantined": 0,
    "rows": 5,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:53Z"
+   "updated_at": "2026-08-31T19:25:01Z"
   },
   "Campania": {
    "quarantined": 0,
    "rows": 0,
    "status": "empty",
-   "updated_at": "2026-08-31T12:54:54Z"
+   "updated_at": "2026-08-31T19:25:01Z"
   },
   "Emilia": {
    "quarantined": 0,
    "rows": 6,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:55Z"
+   "updated_at": "2026-08-31T19:25:02Z"
   },
   "Friuli": {
    "quarantined": 0,
    "rows": 5,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:56Z"
+   "updated_at": "2026-08-31T19:25:02Z"
   },
   "Lazio": {
    "quarantined": 0,
    "rows": 5,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:57Z"
+   "updated_at": "2026-08-31T19:25:03Z"
   },
   "Liguria": {
    "quarantined": 0,
    "rows": 6,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:57Z"
+   "updated_at": "2026-08-31T19:25:04Z"
   },
   "Lombardia": {
    "quarantined": 0,
    "rows": 2,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:58Z"
+   "updated_at": "2026-08-31T19:25:04Z"
   },
   "Marche": {
    "quarantined": 0,
    "rows": 24,
    "status": "ok",
-   "updated_at": "2026-08-31T12:54:59Z"
+   "updated_at": "2026-08-31T19:25:05Z"
   },
   "Molise": {
    "quarantined": 0,
    "rows": 0,
    "status": "empty",
-   "updated_at": "2026-08-31T12:55:00Z"
+   "updated_at": "2026-08-31T19:25:06Z"
   },
   "Piemonte": {
    "quarantined": 0,
    "rows": 21,
    "status": "ok",
-   "updated_at": "2026-08-31T12:55:01Z"
+   "updated_at": "2026-08-31T19:25:06Z"
   },
   "Puglia": {
    "quarantined": 0,
    "rows": 6,
    "status": "ok",
-   "updated_at": "2026-08-31T12:55:02Z"
+   "updated_at": "2026-08-31T19:25:07Z"
   },
   "Sardegna": {
    "quarantined": 0,
    "rows": 8,
    "status": "ok",
-   "updated_at": "2026-08-31T12:55:03Z"
+   "updated_at": "2026-08-31T19:25:08Z"
   },
   "Sicilia": {
    "quarantined": 0,
    "rows": 12,
    "status": "ok",
-   "updated_at": "2026-08-31T12:55:04Z"
+   "updated_at": "2026-08-31T19:25:09Z"
   },
   "Toscana": {
    "quarantined": 0,
    "rows": 8,
    "status": "ok",
-   "updated_at": "2026-08-31T12:55:05Z"
+   "updated_at": "2026-08-31T19:25:10Z"
   },
   "Trentino": {
    "quarantined": 0,
    "rows": 0,
    "status": "empty",
-   "updated_at": "2026-08-31T12:55:06Z"
+   "updated_at": "2026-08-31T19:25:10Z"
   },
   "Umbria": {
    "quarantined": 0,
    "rows": 2,
    "status": "ok",
-   "updated_at": "2026-08-31T12:55:07Z"
+   "updated_at": "2026-08-31T19:25:11Z"
   },
   "Valle d'Aosta": {
    "quarantined": 0,
    "rows": 6,
    "status": "ok",
-   "updated_at": "2026-08-31T12:55:07Z"
+   "updated_at": "2026-08-31T19:25:12Z"
   },
   "Veneto": {
    "quarantined": 0,
    "rows": 8,
    "status": "ok",
-   "updated_at": "2026-08-31T12:55:08Z"
+   "updated_at": "2026-08-31T19:25:12Z"
   }
  },
  "schema_version": 1,
  "sources": {
   "mit": {
    "count": 4109,
-   "fetched_at": "2026-08-31T13:08:55Z"
+   "fetched_at": "2026-08-31T19:27:09Z"
   },
   "polizia_fixed_auto": {
-   "fetched_at": "2026-08-31T13:08:55Z",
+   "fetched_at": "2026-08-31T19:27:09Z",
    "url": "https://www.poliziadistato.it/statics/96/mvpostazionefissaaut_07102025.pdf"
   },
   "polizia_fixed_ord": {
-   "fetched_at": "2026-08-31T13:08:55Z",
+   "fetched_at": "2026-08-31T19:27:09Z",
    "url": "https://www.poliziadistato.it/statics/86/mvpostazionefissaord_27082021.pdf"
   },
   "polizia_mobile": {
-   "fetched_at": "2026-08-31T13:08:55Z",
+   "fetched_at": "2026-08-31T19:27:09Z",
    "valid_from": "2026-08-31",
    "valid_to": "2026-09-06"
   }
