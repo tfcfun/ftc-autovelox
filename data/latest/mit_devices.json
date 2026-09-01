@@ -2760,21 +2760,6 @@
   "versione": "Non presente"
  },
  {
-  "codice_accertatore": "CMNUP000",
-  "codice_catastale": "F979",
-  "data_decreto": null,
-  "ente": "POLIZIA LOCALE NUORO",
-  "id": 452,
-  "marca": "Sodi Scientifica",
-  "matricola": "955380",
-  "modello": "Autovelox 106",
-  "n_decreto": "3758",
-  "note": "",
-  "tipo": "sconosciuto",
-  "tipo_raw": "Rilevatore di velocità in modalità istantanea",
-  "versione": "Non presente"
- },
- {
   "codice_accertatore": "CMMIP049",
   "codice_catastale": "G634",
   "data_decreto": "2011-06-13",
@@ -3928,21 +3913,6 @@
   "tipo": "sconosciuto",
   "tipo_raw": "autovelox",
   "versione": "AXIS P1365MKII"
- },
- {
-  "codice_accertatore": "CMCHP208",
-  "codice_catastale": "L284",
-  "data_decreto": "2021-12-23",
-  "ente": "COMANDO DI POLIZIA LOCALE TORREVECCHIA TEATINA",
-  "id": 614,
-  "marca": "EngiNe",
-  "matricola": "sensore radar 0x00032A41",
-  "modello": "EnVES EVO MVD",
-  "n_decreto": "550",
-  "note": "",
-  "tipo": "sconosciuto",
-  "tipo_raw": "EnVES EVO",
-  "versione": "1605"
  },
  {
   "codice_accertatore": "CMBSP223",
@@ -9375,21 +9345,6 @@
   "versione": "ND"
  },
  {
-  "codice_accertatore": "CMCOP023",
-  "codice_catastale": "G009",
-  "data_decreto": "2011-06-13",
-  "ente": "COMANDO DI POLIZIA LOCALE INTERCOMUNALE COGGIONO-ANNONE DI BRIANZA",
-  "id": 1512,
-  "marca": "TELELASER Tru-Cam",
-  "matricola": "TC005070",
-  "modello": "TruCam",
-  "n_decreto": "3248",
-  "note": "",
-  "tipo": "sconosciuto",
-  "tipo_raw": "TELELASER",
-  "versione": "4244"
- },
- {
   "codice_accertatore": "CMALP005",
   "codice_catastale": "C243",
   "data_decreto": "2021-06-13",
@@ -11623,21 +11578,6 @@
   "tipo": "fisso",
   "tipo_raw": "AUTOVELOX FISSO",
   "versione": "089089051321AA0"
- },
- {
-  "codice_accertatore": "CMCHP239",
-  "codice_catastale": "F196",
-  "data_decreto": "2021-12-23",
-  "ente": "POLIZIA LOCALE COMUNE DI MIGLIANICO",
-  "id": 1946,
-  "marca": "EngiNe",
-  "matricola": "0x00032a41",
-  "modello": "EnVES EVO MVD",
-  "n_decreto": "550",
-  "note": "",
-  "tipo": "sconosciuto",
-  "tipo_raw": "sensore radar",
-  "versione": "1605"
  },
  {
   "codice_accertatore": "CMVRP018",
@@ -61633,5 +61573,80 @@
   "tipo": "media",
   "tipo_raw": "SISTEMA DI MISURA DELLA VELOCITA MEDIA DEI VEICOLI",
   "versione": "1.2.0 LUGLIO 2021"
+ },
+ {
+  "codice_accertatore": "CMCHP208",
+  "codice_catastale": "L284",
+  "data_decreto": "2010-12-30",
+  "ente": "POLIZIA LOCALE - COMUNE DI TORREVECCHIA TEATINA",
+  "id": 17202,
+  "marca": "eltraff",
+  "matricola": "3189-3259",
+  "modello": "velomatic",
+  "n_decreto": "103683",
+  "note": "completo di dispositivo 2F",
+  "tipo": "sconosciuto",
+  "tipo_raw": "Disp di misura velocita istantanea veicoli",
+  "versione": "512D"
+ },
+ {
+  "codice_accertatore": "CMCHP239",
+  "codice_catastale": "F196",
+  "data_decreto": "2010-12-30",
+  "ente": "POLIZIA LOCALE - COMUNE DI MIGLIANICO",
+  "id": 17203,
+  "marca": "ELTRAFF",
+  "matricola": "7792-7626",
+  "modello": "VELOMATIC",
+  "n_decreto": "103683",
+  "note": "Completo di dispositivo 2F",
+  "tipo": "sconosciuto",
+  "tipo_raw": "Disp. di misurazione velocita istantanea veicoli",
+  "versione": "512D"
+ },
+ {
+  "codice_accertatore": "CMNUP000",
+  "codice_catastale": "F979",
+  "data_decreto": "2026-06-08",
+  "ente": "Polizia Locale Nuoro",
+  "id": 17204,
+  "marca": "Sodi Scientifica",
+  "matricola": "955380",
+  "modello": "Autovelox 106",
+  "n_decreto": "125",
+  "note": "Omologata ai sensi dell'art. 6, comma 1, del Decreto ministeriale n. 125/2026 del MIT",
+  "tipo": "sconosciuto",
+  "tipo_raw": "Rilevatore di velocità in modalità istantanea",
+  "versione": "Autovelox 106"
+ },
+ {
+  "codice_accertatore": "CMVRP002",
+  "codice_catastale": "E502",
+  "data_decreto": "2011-06-13",
+  "ente": "Polizia Locale Comune di Lazise",
+  "id": 17205,
+  "marca": "Laser Technology Inc.",
+  "matricola": "TC004714",
+  "modello": "Telelaser trucam",
+  "n_decreto": "3248",
+  "note": "",
+  "tipo": "sconosciuto",
+  "tipo_raw": "Telelaser",
+  "versione": "Base"
+ },
+ {
+  "codice_accertatore": "CMCOP023",
+  "codice_catastale": "G009",
+  "data_decreto": "2026-06-08",
+  "ente": "CMCO0023",
+  "id": 17207,
+  "marca": "TELELASER Trucam",
+  "matricola": "TC005070",
+  "modello": "Trucam",
+  "n_decreto": "125/2026",
+  "note": "",
+  "tipo": "sconosciuto",
+  "tipo_raw": "TELELASER",
+  "versione": "4244"
  }
 ]
