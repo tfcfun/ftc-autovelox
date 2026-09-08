@@ -61576,17 +61576,17 @@
  },
  {
   "codice_accertatore": "CMVIP234",
-  "codice_catastale": "CMVIP23401",
+  "codice_catastale": "B403",
   "data_decreto": "2026-02-17",
-  "ente": "EnVES EVO MVD 2005",
-  "id": 17257,
-  "marca": "Engine",
+  "ente": "Unione dei Comuni di Caldogno e Isola Vic. Polizia Locale Distretto VI1C",
+  "id": 17259,
+  "marca": "Engine S.p.A.",
   "matricola": "0X0003ED76",
   "modello": "EnVES",
   "n_decreto": "n. 38",
-  "note": "Omologato ex art. 6 c. 1° del DM n. 125-26",
+  "note": "Autovelox Omologato ex art. 6 c. 1° del Decreto Ministeriale n. 125/26",
   "tipo": "mobile",
-  "tipo_raw": "apparato mobile",
+  "tipo_raw": "Apparecchiatura Mobile",
   "versione": "EVO MVD 2005"
  }
 ]
