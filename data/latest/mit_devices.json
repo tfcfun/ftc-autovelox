@@ -32400,21 +32400,6 @@
   "versione": "TRUCAM"
  },
  {
-  "codice_accertatore": "CMSIP009",
-  "codice_catastale": "comune_di_buonconvento_polizia_locale",
-  "data_decreto": null,
-  "ente": "CMSIP009",
-  "id": 6601,
-  "marca": "rilevatore_di_velocita_autovelox",
-  "matricola": "enves_evo_mvd",
-  "modello": "engine_srl",
-  "n_decreto": "B269",
-  "note": "ae106d_elaboratore_cmp3004029_cmp3785223_laser",
-  "tipo": "sconosciuto",
-  "tipo_raw": "pr1883_29-3-13_pr4121_9-07-13_pr46574_18-7-25",
-  "versione": "enves_evo_mvd"
- },
- {
   "codice_accertatore": "CMAPP002",
   "codice_catastale": "I324",
   "data_decreto": "2006-06-27",
@@ -61678,5 +61663,20 @@
   "tipo": "mobile",
   "tipo_raw": "AUTOVELOX MOBILE",
   "versione": "NON SPECIFICATO"
+ },
+ {
+  "codice_accertatore": "CMSIP009",
+  "codice_catastale": "B269",
+  "data_decreto": null,
+  "ente": "Comune_di_Buonconvento_Polizia_Locale",
+  "id": 17333,
+  "marca": "ENGINE",
+  "matricola": "0x0003ED5D-0x0003EE6C",
+  "modello": "EnVES_EVO_MVD_2005",
+  "n_decreto": "38",
+  "note": "",
+  "tipo": "sconosciuto",
+  "tipo_raw": "Rilevatore_di_velocità_in_modalita_istantanea",
+  "versione": "EnVES_EVO_MVD_2005"
  }
 ]
