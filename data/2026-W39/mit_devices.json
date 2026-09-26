@@ -34395,21 +34395,6 @@
   "versione": "EnVES EVO MVD 1605"
  },
  {
-  "codice_accertatore": "CMPVP224",
-  "codice_catastale": "G635",
-  "data_decreto": "2017-06-21",
-  "ente": "Comune di Pieve Albignola",
-  "id": 8993,
-  "marca": "EngiNe",
-  "matricola": "0x00029546",
-  "modello": "EnVES EVO MVD",
-  "n_decreto": "4020",
-  "note": "",
-  "tipo": "fisso",
-  "tipo_raw": "Installato in postazione fissa non presidiata",
-  "versione": "1605"
- },
- {
   "codice_accertatore": "CMMIP004",
   "codice_catastale": "F704",
   "data_decreto": "2011-06-16",
@@ -61888,5 +61873,20 @@
   "tipo": "sconosciuto",
   "tipo_raw": "Rilevatore di velocità in modalità istantanea",
   "versione": "n.p."
+ },
+ {
+  "codice_accertatore": "CMPVP224",
+  "codice_catastale": "G635",
+  "data_decreto": "2026-04-20",
+  "ente": "Comune di Pieve Albignola",
+  "id": 18159,
+  "marca": "EngiNe",
+  "matricola": "0x00029546",
+  "modello": "EnVES EVO MVD",
+  "n_decreto": "149",
+  "note": "Conferma di approvazione del decreto dirigenziale n. 550 del 23 dicembre 2021",
+  "tipo": "fisso",
+  "tipo_raw": "Installato in postazione fissa non presidiata",
+  "versione": "1605"
  }
 ]
