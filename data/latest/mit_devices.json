@@ -62068,5 +62068,20 @@
   "tipo": "mobile",
   "tipo_raw": "Autovelox mobile",
   "versione": "TRUCAM"
+ },
+ {
+  "codice_accertatore": "CMVTP219",
+  "codice_catastale": "D503",
+  "data_decreto": "2026-06-08",
+  "ente": "POLIZIA LOCALE FARNESE",
+  "id": 19180,
+  "marca": "SODI SCIENTIFICA S.R.L.",
+  "matricola": "RILEVATORE 952275_CPU 955937",
+  "modello": "AUTOVELOX 106",
+  "n_decreto": "OMOLOGATO EX ART. 6 COMMA 1 DEL D.M. MIT",
+  "note": "STRUMENTAZIONE A NOLEGGIO",
+  "tipo": "mobile",
+  "tipo_raw": "AUTOVELOX MOBILE",
+  "versione": "AUTOVELOX 106"
  }
 ]
