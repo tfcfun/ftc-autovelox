@@ -1580,7 +1580,7 @@
   "road_name": "Bretella",
   "road_ref": "A11",
   "road_type": "Autostrada",
-  "segment_id": null,
+  "segment_id": "seg-A11-LU",
   "week": "2026-W41"
  },
  {
