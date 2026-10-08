@@ -62158,5 +62158,20 @@
   "tipo": "sconosciuto",
   "tipo_raw": "autovelox",
   "versione": "512D"
+ },
+ {
+  "codice_accertatore": "CMSOP000",
+  "codice_catastale": "I829",
+  "data_decreto": "2011-06-13",
+  "ente": "POLIZIA LOCALE SONDRIO",
+  "id": 19198,
+  "marca": "ELTRAFF",
+  "matricola": "TC004128",
+  "modello": "TELELASER",
+  "n_decreto": "3248",
+  "note": "",
+  "tipo": "mobile",
+  "tipo_raw": "MOBILE",
+  "versione": "TRUCAM"
  }
 ]
