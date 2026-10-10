@@ -5505,21 +5505,6 @@
   "versione": "089089051321AA0"
  },
  {
-  "codice_accertatore": "CMPIP010",
-  "codice_catastale": "I232",
-  "data_decreto": "2011-06-13",
-  "ente": "POLIZIA LOCALE COMUNE DI SANTA MARIA A MONTE",
-  "id": 912,
-  "marca": "ELTRAFF",
-  "matricola": "TC003151",
-  "modello": "TELELASER",
-  "n_decreto": "3248",
-  "note": "",
-  "tipo": "mobile",
-  "tipo_raw": "MOBILE",
-  "versione": "TRUCAM"
- },
- {
   "codice_accertatore": "CMPGP011",
   "codice_catastale": "A710",
   "data_decreto": "2011-06-13",
@@ -62218,5 +62203,20 @@
   "tipo": "sconosciuto",
   "tipo_raw": "Rilevatore infrazioni semaforiche",
   "versione": "VRS-EVO-L0"
+ },
+ {
+  "codice_accertatore": "CMPIP010",
+  "codice_catastale": "I232",
+  "data_decreto": "2026-07-11",
+  "ente": "POLIZIA LOCALE COMUNE DI SANTA MARIA A MONTE",
+  "id": 19212,
+  "marca": "ELTRAFF",
+  "matricola": "TC003151",
+  "modello": "TELELASER",
+  "n_decreto": "125/2026",
+  "note": "",
+  "tipo": "mobile",
+  "tipo_raw": "MOBILE",
+  "versione": "TRUCAM"
  }
 ]
