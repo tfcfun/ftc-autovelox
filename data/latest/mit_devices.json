@@ -62218,5 +62218,20 @@
   "tipo": "mobile",
   "tipo_raw": "MOBILE",
   "versione": "TRUCAM"
+ },
+ {
+  "codice_accertatore": "CMCEP255",
+  "codice_catastale": "D769",
+  "data_decreto": "2026-04-02",
+  "ente": "Comune di Francolise Polizia Municipale",
+  "id": 19213,
+  "marca": "EngiNe",
+  "matricola": "0x0003ED81",
+  "modello": "EnVES EVO MVD 2005",
+  "n_decreto": "45070",
+  "note": "",
+  "tipo": "mobile",
+  "tipo_raw": "Misuratore di velocità istantanea mobile",
+  "versione": "non presente"
  }
 ]
