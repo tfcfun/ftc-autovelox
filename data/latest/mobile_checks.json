@@ -1173,7 +1173,7 @@
   "road_name": "di Porto Empedocle",
   "road_ref": "SS640",
   "road_type": "Strada Statale",
-  "segment_id": null,
+  "segment_id": "seg-SS640-CL",
   "week": "2026-W42"
  },
  {
