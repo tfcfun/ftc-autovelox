@@ -30915,21 +30915,6 @@
   "versione": "TRUCAM HD"
  },
  {
-  "codice_accertatore": "CMIMP213",
-  "codice_catastale": "G164",
-  "data_decreto": "1989-11-27",
-  "ente": "Polizia Locale Ospedaletti",
-  "id": 6560,
-  "marca": "Eltraff",
-  "matricola": "7209-7255",
-  "modello": "Velomatic",
-  "n_decreto": "2961",
-  "note": "NOLEGGIO",
-  "tipo": "mobile",
-  "tipo_raw": "MOBILE -rilevatore di velocità in mod.istantanea",
-  "versione": "512D"
- },
- {
   "codice_accertatore": "CMTVP250",
   "codice_catastale": "B879",
   "data_decreto": null,
@@ -62188,5 +62173,50 @@
   "tipo": "sconosciuto",
   "tipo_raw": "Apparato di rilevamento di velocita' istantanea",
   "versione": "EnVES EVO MVD 2005"
+ },
+ {
+  "codice_accertatore": "CMIMP213",
+  "codice_catastale": "G164",
+  "data_decreto": "2026-02-17",
+  "ente": "Polizia Locale Ospedaletti",
+  "id": 19237,
+  "marca": "Eltraff",
+  "matricola": "7209-7255",
+  "modello": "Velomatic",
+  "n_decreto": "39",
+  "note": "NOLEGGIO",
+  "tipo": "mobile",
+  "tipo_raw": "MOBILE -rilevatore di velocità in mod.istantanea",
+  "versione": "512D"
+ },
+ {
+  "codice_accertatore": "CMIMP213",
+  "codice_catastale": "G164",
+  "data_decreto": "2026-02-17",
+  "ente": "Polizia Locale Ospedaletti",
+  "id": 19238,
+  "marca": "Eltraff",
+  "matricola": "7160-7095",
+  "modello": "Velomatic",
+  "n_decreto": "39",
+  "note": "NOLEGGIO",
+  "tipo": "mobile",
+  "tipo_raw": "MOBILE-rilevatore velocità in modalità istantanea",
+  "versione": "512D"
+ },
+ {
+  "codice_accertatore": "CMTNP218",
+  "codice_catastale": "C756",
+  "data_decreto": "2026-06-11",
+  "ente": "POLIZIA LOCALE COMUNE DI CIVEZZANO",
+  "id": 19239,
+  "marca": "SODI SCIENTIFICA",
+  "matricola": "0x0004C3B8 (radar) + 962303 (cpu)",
+  "modello": "AUTOVELOX 106SE RADAR",
+  "n_decreto": "PROT. USCITA N. 0060797",
+  "note": "SS47 DIREZIONE TRENTO",
+  "tipo": "fisso",
+  "tipo_raw": "POSTAZIONE FISSA",
+  "versione": "RADAR"
  }
 ]
