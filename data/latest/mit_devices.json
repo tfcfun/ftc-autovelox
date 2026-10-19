@@ -30705,51 +30705,6 @@
   "versione": "NON PRESENTE"
  },
  {
-  "codice_accertatore": "CMTOP018",
-  "codice_catastale": "M060",
-  "data_decreto": "2000-03-20",
-  "ente": "Comune di Vinovo",
-  "id": 7212,
-  "marca": "Eltraff",
-  "matricola": "UL005338",
-  "modello": "Telelaser",
-  "n_decreto": "1824",
-  "note": "",
-  "tipo": "mobile",
-  "tipo_raw": "mobile",
-  "versione": "Ultralyte"
- },
- {
-  "codice_accertatore": "CMTOP018",
-  "codice_catastale": "M060",
-  "data_decreto": "2011-08-01",
-  "ente": "Comune di Vinovo",
-  "id": 7213,
-  "marca": "Eltraff",
-  "matricola": "5377",
-  "modello": "FTR",
-  "n_decreto": "4084",
-  "note": "",
-  "tipo": "fisso",
-  "tipo_raw": "fisso",
-  "versione": "FT1D"
- },
- {
-  "codice_accertatore": "CMTOP018",
-  "codice_catastale": "M060",
-  "data_decreto": "2011-08-01",
-  "ente": "Comune di Vinovo",
-  "id": 7214,
-  "marca": "Eltraff",
-  "matricola": "486",
-  "modello": "FTR",
-  "n_decreto": "4084",
-  "note": "",
-  "tipo": "fisso",
-  "tipo_raw": "fisso",
-  "versione": "FT1D"
- },
- {
   "codice_accertatore": "CMSVP220",
   "codice_catastale": "H126",
   "data_decreto": "2021-08-18",
@@ -62158,5 +62113,35 @@
   "tipo": "fisso",
   "tipo_raw": "FISSO",
   "versione": "T5-5-R"
+ },
+ {
+  "codice_accertatore": "CMTOP018",
+  "codice_catastale": "M060",
+  "data_decreto": "2011-08-01",
+  "ente": "Comune di Vinovo",
+  "id": 19265,
+  "marca": "Eltraff",
+  "matricola": "5377",
+  "modello": "FTR",
+  "n_decreto": "4084",
+  "note": "",
+  "tipo": "fisso",
+  "tipo_raw": "fisso",
+  "versione": "FT1D"
+ },
+ {
+  "codice_accertatore": "CMTOP018",
+  "codice_catastale": "M060",
+  "data_decreto": "2011-08-01",
+  "ente": "Comune di Vinovo",
+  "id": 19266,
+  "marca": "Eltraff",
+  "matricola": "486",
+  "modello": "FTR",
+  "n_decreto": "4084",
+  "note": "",
+  "tipo": "fisso",
+  "tipo_raw": "fisso",
+  "versione": "FT1D"
  }
 ]
