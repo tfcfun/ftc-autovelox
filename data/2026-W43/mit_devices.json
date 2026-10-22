@@ -19695,21 +19695,6 @@
   "versione": "PREMIUM"
  },
  {
-  "codice_accertatore": "CMPGP015",
-  "codice_catastale": "E975",
-  "data_decreto": "2011-06-13",
-  "ente": "POLIZIA LOCALE MARSCIANO",
-  "id": 4017,
-  "marca": "ELTRAFF",
-  "matricola": "TC004124",
-  "modello": "TRU-CAM",
-  "n_decreto": "3248",
-  "note": "",
-  "tipo": "sconosciuto",
-  "tipo_raw": "TELELASER TRU-CAM",
-  "versione": "DEC 2015"
- },
- {
   "codice_accertatore": "CMMIP225",
   "codice_catastale": "A376",
   "data_decreto": "2018-07-05",
@@ -62143,5 +62128,20 @@
   "tipo": "fisso",
   "tipo_raw": "Disp. fisso misura velocita' istantanea veicoli",
   "versione": "-"
+ },
+ {
+  "codice_accertatore": "CMPGP015",
+  "codice_catastale": "E975",
+  "data_decreto": "2026-02-17",
+  "ente": "POLIZIA LOCALE MARSCIANO",
+  "id": 19284,
+  "marca": "ELTRAFF",
+  "matricola": "TC004124",
+  "modello": "TRUCAM",
+  "n_decreto": "40",
+  "note": "",
+  "tipo": "sconosciuto",
+  "tipo_raw": "TELELASER TRUCAM",
+  "versione": "DEC 2015"
  }
 ]
