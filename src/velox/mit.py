@@ -14,10 +14,14 @@ from __future__ import annotations
 import html
 import json
 import re
+from pathlib import Path
 
 from velox.fetch import fetch
 
 ENDPOINT = "https://velox.mit.gov.it/dispositivi/data"
+# Since 2026-10-24 the MIT answers Italian addresses only; a machine in Italy
+# keeps this copy current (`velox mirror-mit`) for the GitHub runner.
+MIRROR = Path("cache/mit/devices.json")
 
 _DATE = re.compile(r"^(\d{1,2})/(\d{1,2})/(\d{4})$")
 
@@ -80,3 +84,38 @@ def fetch_devices(*, page_size: int = 5000) -> list[dict]:
     if total and len(rows) < total:
         raise ValueError(f"MIT register truncated: got {len(rows)} of {total}")
     return [normalise_device(row) for row in rows]
+
+
+def read_mirror(path) -> tuple[list[dict], str] | None:
+    """The register mirrored by a machine in Italy, or None when there is none.
+
+    Missing, unreadable, empty or undated all read as absent: a damaged mirror
+    must never stand in for the register.
+    """
+    try:
+        body = json.loads(Path(path).read_text(encoding="utf-8"))
+        devices, fetched_at = body["devices"], body["fetched_at"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    if not devices or not fetched_at:
+        return None
+    return devices, fetched_at
+
+
+def write_mirror(path, devices: list[dict], fetched_at: str) -> bool:
+    """Store the register; True only when its content changed.
+
+    An unchanged register keeps the date it was first read, so the daily
+    mirror job has nothing to commit on the days the MIT published nothing.
+    """
+    if not devices:
+        raise ValueError("refusing to mirror an empty MIT register")
+    path = Path(path)
+    current = read_mirror(path)
+    if current and current[0] == devices:
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"fetched_at": fetched_at, "devices": devices},
+                               ensure_ascii=False, indent=1, sort_keys=True),
+                    encoding="utf-8")
+    return True

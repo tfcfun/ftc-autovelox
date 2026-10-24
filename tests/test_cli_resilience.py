@@ -99,7 +99,7 @@ def _down():
 
 def test_mit_outage_reuses_the_last_published_register_with_its_own_date(tmp_path):
     _publish_previous(tmp_path, [{"id": 1}, {"id": 2}])
-    devices, source = mit_devices_or_previous(tmp_path, fetcher=_down)
+    devices, source = mit_devices_or_previous(tmp_path, fetcher=_down, mirror=tmp_path / "no-mirror.json")
     assert devices == [{"id": 1}, {"id": 2}]
     # The date must stay the day the register was really read, never today:
     # the app shows it, and restamping it would claim a check that never happened.
@@ -108,13 +108,13 @@ def test_mit_outage_reuses_the_last_published_register_with_its_own_date(tmp_pat
 
 def test_mit_outage_with_nothing_published_still_fails(tmp_path):
     with pytest.raises(ConnectionError):
-        mit_devices_or_previous(tmp_path, fetcher=_down)
+        mit_devices_or_previous(tmp_path, fetcher=_down, mirror=tmp_path / "no-mirror.json")
 
 
 def test_mit_outage_with_an_empty_previous_register_still_fails(tmp_path):
     _publish_previous(tmp_path, [])
     with pytest.raises(ConnectionError):
-        mit_devices_or_previous(tmp_path, fetcher=_down)
+        mit_devices_or_previous(tmp_path, fetcher=_down, mirror=tmp_path / "no-mirror.json")
 
 
 def test_a_fresh_register_is_used_and_stamped_now(tmp_path):

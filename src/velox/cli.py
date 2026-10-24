@@ -15,7 +15,8 @@ from pathlib import Path
 from velox.constants import REGIONS
 from velox.fetch import fetch, utc_now
 from velox.geocode_fixed import geocode, geocode_stub
-from velox.mit import fetch_devices
+from velox.mit import MIRROR as MIT_MIRROR
+from velox.mit import fetch_devices, read_mirror, write_mirror
 from velox.overpass import cache_key, query_road_geometry
 from velox.parse_fixed import parse_fixed
 from velox.parse_mobile import MobileCheck, parse_mobile, pdf_to_text
@@ -110,30 +111,62 @@ def _previous_regions(root: Path) -> dict:
     return json.loads(index.read_text()).get("regions", {})
 
 
-def mit_devices_or_previous(root: Path, *, fetcher=fetch_devices) -> tuple[list[dict], dict]:
-    """The MIT register, or the last published copy when the MIT site is down.
+def _published_mit(root: Path) -> tuple[list[dict], dict] | None:
+    latest = root / "latest"
+    try:
+        devices = json.loads((latest / "mit_devices.json").read_text(encoding="utf-8"))
+        source = json.loads((latest / "index.json").read_text(encoding="utf-8"))
+        source = dict(source["sources"]["mit"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    if not devices or not source.get("fetched_at"):
+        return None
+    source["count"] = len(devices)
+    return devices, source
 
-    The register only feeds the fine check, and it changes slowly; one outage of
-    velox.mit.gov.it must not throw away a run that already holds the Polizia
-    programme (2026-10-24 died exactly so). The fallback keeps the date the
-    register was really read. With no usable previous copy the failure stands.
+
+def mit_devices_or_previous(
+    root: Path, *, fetcher=fetch_devices, mirror: Path = MIT_MIRROR
+) -> tuple[list[dict], dict]:
+    """The MIT register, or the freshest copy we hold when it cannot be read.
+
+    The register only feeds the fine check, and it changes slowly; failing to
+    read velox.mit.gov.it must not throw away a run that already holds the
+    Polizia programme (2026-10-24 died exactly so). Since that day the MIT
+    answers Italian addresses only, so the runner relies on the copy a machine
+    in Italy mirrors into the repo, or else on the last published one. Either
+    keeps the date the register was really read. With neither, the failure stands.
     """
     try:
         devices = fetcher()
-    except Exception as exc:  # noqa: BLE001 - degrade to the last copy, or re-raise
-        latest = root / "latest"
-        try:
-            previous = json.loads((latest / "mit_devices.json").read_text(encoding="utf-8"))
-            source = json.loads((latest / "index.json").read_text(encoding="utf-8"))
-            source = source["sources"]["mit"]
-        except (OSError, ValueError, KeyError, TypeError):
-            raise exc from None
-        if not previous or not source.get("fetched_at"):
-            raise exc
-        print(f"MIT register FAILED ({exc}); keeping the copy read at "
-              f"{source['fetched_at']}", file=sys.stderr)
-        return previous, {"fetched_at": source["fetched_at"], "count": len(previous)}
+    except Exception as exc:  # noqa: BLE001 - degrade to a held copy, or re-raise
+        candidates = []
+        published = _published_mit(root)
+        if published:
+            candidates.append(published)
+        mirrored = read_mirror(mirror)
+        if mirrored:
+            candidates.append((mirrored[0], {"fetched_at": mirrored[1],
+                                             "count": len(mirrored[0]), "via": "mirror"}))
+        if not candidates:
+            raise
+        # ISO-8601 UTC stamps sort as text; on a tie the published copy wins,
+        # so a run that read nothing new rewrites nothing.
+        devices, source = max(candidates, key=lambda c: c[1]["fetched_at"])
+        print(f"MIT register FAILED ({exc}); using the copy read at "
+              f"{source['fetched_at']}{' (mirror)' if source.get('via') else ''}",
+              file=sys.stderr)
+        return devices, source
     return devices, {"fetched_at": utc_now(), "count": len(devices)}
+
+
+def mirror_mit(path: Path) -> int:
+    """Run on a machine in Italy: refresh the committed copy of the register."""
+    devices = fetch_devices()
+    changed = write_mirror(path, devices, utc_now())
+    print(f"{path}: {len(devices)} devices, {'changed' if changed else 'unchanged'}",
+          file=sys.stderr)
+    return 0
 
 
 def ingest(root: Path) -> int:
@@ -248,9 +281,13 @@ def main() -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     ingest_cmd = sub.add_parser("ingest")
     ingest_cmd.add_argument("--root", default="data")
+    mirror_cmd = sub.add_parser("mirror-mit")
+    mirror_cmd.add_argument("--path", default=str(MIT_MIRROR))
     args = parser.parse_args()
     if args.command == "ingest":
         return ingest(Path(args.root))
+    if args.command == "mirror-mit":
+        return mirror_mit(Path(args.path))
     return 1
 
 
