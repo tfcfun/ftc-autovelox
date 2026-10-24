@@ -6,7 +6,11 @@ costs a week of data - and the failure looks identical to "nothing was
 published", which is the exact confusion this pipeline exists to avoid.
 """
 
-from velox.cli import _road_slug, build_mobile_records
+import json
+
+import pytest
+
+from velox.cli import _road_slug, build_mobile_records, mit_devices_or_previous
 from velox.geocode_fixed import geocode_stub
 from velox.parse_fixed import FixedCamera
 from velox.parse_mobile import MobileCheck
@@ -78,12 +82,6 @@ def test_ref_is_preferred_over_name_for_the_slug():
 
 # --- MIT register outage (2026-10-24: velox.mit.gov.it connect-timed out from
 # the runner and the whole run died with the Polizia data already fetched) ---
-
-import json
-
-import pytest
-
-from velox.cli import mit_devices_or_previous
 
 
 def _publish_previous(root, devices, fetched_at="2026-10-23T12:29:46Z"):
