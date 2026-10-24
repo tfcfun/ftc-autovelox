@@ -62158,5 +62158,20 @@
   "tipo": "fisso",
   "tipo_raw": "Autovelox fisso",
   "versione": "N.A."
+ },
+ {
+  "codice_accertatore": "CMNOP250",
+  "codice_catastale": "L670",
+  "data_decreto": "2019-09-27",
+  "ente": "COMUNE DI VARALLO POMBIA",
+  "id": 19295,
+  "marca": "SODI SCIENTIFICA SRL",
+  "matricola": "956790",
+  "modello": "106",
+  "n_decreto": "PROT. 325",
+  "note": "",
+  "tipo": "sconosciuto",
+  "tipo_raw": "AUTOVELOX 106",
+  "versione": "106"
  }
 ]
