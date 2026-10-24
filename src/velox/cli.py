@@ -110,6 +110,32 @@ def _previous_regions(root: Path) -> dict:
     return json.loads(index.read_text()).get("regions", {})
 
 
+def mit_devices_or_previous(root: Path, *, fetcher=fetch_devices) -> tuple[list[dict], dict]:
+    """The MIT register, or the last published copy when the MIT site is down.
+
+    The register only feeds the fine check, and it changes slowly; one outage of
+    velox.mit.gov.it must not throw away a run that already holds the Polizia
+    programme (2026-10-24 died exactly so). The fallback keeps the date the
+    register was really read. With no usable previous copy the failure stands.
+    """
+    try:
+        devices = fetcher()
+    except Exception as exc:  # noqa: BLE001 - degrade to the last copy, or re-raise
+        latest = root / "latest"
+        try:
+            previous = json.loads((latest / "mit_devices.json").read_text(encoding="utf-8"))
+            source = json.loads((latest / "index.json").read_text(encoding="utf-8"))
+            source = source["sources"]["mit"]
+        except (OSError, ValueError, KeyError, TypeError):
+            raise exc from None
+        if not previous or not source.get("fetched_at"):
+            raise exc
+        print(f"MIT register FAILED ({exc}); keeping the copy read at "
+              f"{source['fetched_at']}", file=sys.stderr)
+        return previous, {"fetched_at": source["fetched_at"], "count": len(previous)}
+    return devices, {"fetched_at": utc_now(), "count": len(devices)}
+
+
 def ingest(root: Path) -> int:
     root = Path(root)
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -187,7 +213,7 @@ def ingest(root: Path) -> int:
              "geometry": geometry, "source": "overpass", "fetched_at": utc_now()}
         )
 
-    devices = fetch_devices()
+    devices, mit_source = mit_devices_or_previous(root)
     week = iso_week(valid_from or date.today().isoformat())
 
     payload = {
@@ -203,7 +229,7 @@ def ingest(root: Path) -> int:
                                "valid_to": valid_to},
             "polizia_fixed_auto": {"url": links.fixed_auto, "fetched_at": utc_now()},
             "polizia_fixed_ord": {"url": links.fixed_ord, "fetched_at": utc_now()},
-            "mit": {"fetched_at": utc_now(), "count": len(devices)},
+            "mit": mit_source,
         },
     }
 
