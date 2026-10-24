@@ -13,6 +13,7 @@ final class SnapshotProvider {
     private(set) var snapshot: Snapshot?
     private(set) var errorMessage: String?
     private(set) var didRefreshFail = false
+    private var isRefreshing = false
 
     private let remoteBase = URL(string:
         "https://tfcfun.github.io/ftc-autovelox/data/latest/")!
@@ -85,6 +86,10 @@ final class SnapshotProvider {
     }
 
     func refresh() async {
+        // Launch and the first foregrounding both ask; one download is enough.
+        guard !isRefreshing else { return }
+        isRefreshing = true
+        defer { isRefreshing = false }
         let names = ["index.json", "fixed_cameras.json", "mobile_checks.json",
                      "road_segments.json", "mit_devices.json", "quarantine.json"]
         let staging = FileManager.default.temporaryDirectory

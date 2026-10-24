@@ -8,6 +8,7 @@ struct VeloxApp: App {
         UserDefaults.standard.string(forKey: "velox.tab") ?? "route"
 
     @State private var snapshotProvider = SnapshotProvider()
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -29,6 +30,15 @@ struct VeloxApp: App {
             .task {
                 snapshotProvider.loadCached()
                 await snapshotProvider.refresh()
+            }
+            // `.task` runs once per process, and iOS keeps a suspended app alive
+            // for weeks: on 2026-10-24 the phone still showed the 10/10 data
+            // while Pages had published every day since. Refresh on every return
+            // to the foreground as well.
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    Task { await snapshotProvider.refresh() }
+                }
             }
         }
     }
