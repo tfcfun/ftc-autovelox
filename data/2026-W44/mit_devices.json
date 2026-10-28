@@ -2220,21 +2220,6 @@
   "versione": "TRUCAM HD"
  },
  {
-  "codice_accertatore": "CMBGP009",
-  "codice_catastale": "I628",
-  "data_decreto": "2014-08-06",
-  "ente": "SERIATE POLIZIA MUNICIPALE",
-  "id": 364,
-  "marca": "SODI SCIENTIFICA",
-  "matricola": "947749",
-  "modello": "AUTOVELOX 106",
-  "n_decreto": "3758",
-  "note": "matricola 948744 elaboratore analizzatore",
-  "tipo": "mobile",
-  "tipo_raw": "AUTOVELOX MOBILE",
-  "versione": "AUTOVELOX 106"
- },
- {
   "codice_accertatore": "CMLIP005",
   "codice_catastale": "C044",
   "data_decreto": "2003-02-05",
@@ -7528,21 +7513,6 @@
   "tipo": "sconosciuto",
   "tipo_raw": "Di_misura_della_velocità_istantanea_di_veicoli",
   "versione": "EnVES_EVO_MVD_1309"
- },
- {
-  "codice_accertatore": "CMSSP007",
-  "codice_catastale": "G924",
-  "data_decreto": "2014-08-06",
-  "ente": "POLIZIA LOCALE COMUNE DI PORTO TORRES",
-  "id": 1270,
-  "marca": "Sodi Scientifica",
-  "matricola": "948997",
-  "modello": "Autovelox 106",
-  "n_decreto": "3758",
-  "note": "L’apparecchiatura è attualmente in fase di taratura e revisione presso un centro Accredia – revisione scaduta il 03/05/2025",
-  "tipo": "sconosciuto",
-  "tipo_raw": "Rilevatore di velocità in modalità istantanea",
-  "versione": "CPU – 949413"
  },
  {
   "codice_accertatore": "CMBZP206",
@@ -26593,21 +26563,6 @@
   "tipo": "mobile",
   "tipo_raw": "MOBILE",
   "versione": "TRUSPEED"
- },
- {
-  "codice_accertatore": "CMFOP202",
-  "codice_catastale": "D899",
-  "data_decreto": "2011-06-13",
-  "ente": "Polizia Locale Gambettola",
-  "id": 5343,
-  "marca": "eltraff",
-  "matricola": "TC010686",
-  "modello": "telelaser",
-  "n_decreto": "3248",
-  "note": "Estensione approvazione 242 del 05/07/2018",
-  "tipo": "mobile",
-  "tipo_raw": "mobile",
-  "versione": "trucam HD"
  },
  {
   "codice_accertatore": "CMPVP242",
@@ -62248,5 +62203,65 @@
   "tipo": "mobile",
   "tipo_raw": "MOBILE -rilevatore di velocità in mod. istantanea",
   "versione": "512D"
+ },
+ {
+  "codice_accertatore": "CMFOP202",
+  "codice_catastale": "D899",
+  "data_decreto": "2011-06-13",
+  "ente": "Polizia Locale Gambettola",
+  "id": 19405,
+  "marca": "eltraff",
+  "matricola": "TC010686",
+  "modello": "telelaser",
+  "n_decreto": "3248",
+  "note": "Estensione approvazione 242 del 05/07/2018",
+  "tipo": "mobile",
+  "tipo_raw": "mobile",
+  "versione": "trucam HD"
+ },
+ {
+  "codice_accertatore": "CMFOP202",
+  "codice_catastale": "D899",
+  "data_decreto": "2011-06-13",
+  "ente": "Polizia Locale Gambettola",
+  "id": 19406,
+  "marca": "eltraff",
+  "matricola": "TC010686",
+  "modello": "telelaser",
+  "n_decreto": "3248",
+  "note": "Manutenzione periodica del 15/06/2026",
+  "tipo": "mobile",
+  "tipo_raw": "mobile",
+  "versione": "trucam HD"
+ },
+ {
+  "codice_accertatore": "CMPCP231",
+  "codice_catastale": "L348",
+  "data_decreto": "2026-02-17",
+  "ente": "Comune di Travo - Polizia Locale",
+  "id": 19407,
+  "marca": "EngiNe S.p.A.",
+  "matricola": "sensore radar 0X0003ED82",
+  "modello": "EnVES EVO MVD 2005",
+  "n_decreto": "38",
+  "note": "OMOLOGATO a seguito della pubblicazione in G.U. n. 159 del 11 luglio 2026 del Decreto del MIT 125/2026",
+  "tipo": "mobile",
+  "tipo_raw": "MOBILE",
+  "versione": "Non presente"
+ },
+ {
+  "codice_accertatore": "CMBGP009",
+  "codice_catastale": "I628",
+  "data_decreto": "2026-02-17",
+  "ente": "Polizia Locale comune di Seriate",
+  "id": 19408,
+  "marca": "Eltraff Srl",
+  "matricola": "TC014477",
+  "modello": "TruCam HD",
+  "n_decreto": "Decreto n.42",
+  "note": "",
+  "tipo": "sconosciuto",
+  "tipo_raw": "Telelaser",
+  "versione": "versione HD"
  }
 ]
