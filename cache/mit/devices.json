@@ -62056,51 +62056,6 @@
    "versione": "106"
   },
   {
-   "codice_accertatore": "CMCRP002",
-   "codice_catastale": "201;",
-   "data_decreto": null,
-   "ente": "CMCRP002",
-   "id": 19430,
-   "marca": "Eltraff;",
-   "matricola": "NON APPLICABILE;",
-   "modello": "TELELASER;",
-   "n_decreto": "1824;",
-   "note": "UL007770;",
-   "tipo": "mobile",
-   "tipo_raw": "MOBILE;",
-   "versione": "ULTRALYTE;"
-  },
-  {
-   "codice_accertatore": "CMCRP002",
-   "codice_catastale": "201;",
-   "data_decreto": null,
-   "ente": "CMCRP002",
-   "id": 19431,
-   "marca": "Safety21 S.p.A.;",
-   "matricola": "562;",
-   "modello": "VRS-EVO-R;",
-   "n_decreto": "342;",
-   "note": "Dec.App.n.4708_01/08/2016;Dec.estn.129_07/04/2021;Dec.sub.tit.n.227_04/07/2025 S.S. 343 Asolana 30+677 Casalmaggiore;",
-   "tipo": "fisso",
-   "tipo_raw": "Dispositivo rilevamento velocità istantanea fisso;",
-   "versione": "VRS-EVO-T12-5-R;"
-  },
-  {
-   "codice_accertatore": "CMCRP002",
-   "codice_catastale": "201;",
-   "data_decreto": null,
-   "ente": "CMCRP002",
-   "id": 19432,
-   "marca": "Safety21 S.p.A.;",
-   "matricola": "16423;",
-   "modello": "AGUIA Red & Speed;",
-   "n_decreto": "48;",
-   "note": "Dec.sub.tit.n.227_04/07/2025 Via Alessandro Manzoni - Dir. Viadana all'altezza del civico 1;",
-   "tipo": "fisso",
-   "tipo_raw": "Dispositivo rilevamento velocità istantanea fisso;",
-   "versione": "AGUIA-T5-5-R;"
-  },
-  {
    "codice_accertatore": "CMSPP206",
    "codice_catastale": "L819",
    "data_decreto": "2026-06-08",
@@ -62369,7 +62324,52 @@
    "tipo": "fisso",
    "tipo_raw": "Disp. Fisso per il rilevamento velocità istantanea",
    "versione": "VRS-EVO-R"
+  },
+  {
+   "codice_accertatore": "CMCRP002",
+   "codice_catastale": "B898;",
+   "data_decreto": null,
+   "ente": "polizia locale Casalmaggiore;",
+   "id": 19475,
+   "marca": "Eltraff;",
+   "matricola": "UL007770;",
+   "modello": "TELELASER;",
+   "n_decreto": "1824;",
+   "note": "NON APPLICABILE",
+   "tipo": "mobile",
+   "tipo_raw": "MOBILE;",
+   "versione": "ULTRALYTE;"
+  },
+  {
+   "codice_accertatore": "CMCRP002",
+   "codice_catastale": "B898;",
+   "data_decreto": null,
+   "ente": "polizia locale Casalmaggiore;",
+   "id": 19476,
+   "marca": "Safety21 S.p.A.;",
+   "matricola": "562;",
+   "modello": "VRS-EVO-R;",
+   "n_decreto": "342;",
+   "note": "Dec.App.n.4708_01/08/2016;Dec.estn.129_07/04/2021;Dec.sub.tit.n.227_04/07/2025 S.S. 343 Asolana 30+677 Casalmaggiore",
+   "tipo": "fisso",
+   "tipo_raw": "Dispositivo rilevamento velocità istantanea fisso;",
+   "versione": "VRS-EVO-T12-5-R;"
+  },
+  {
+   "codice_accertatore": "CMCRP002",
+   "codice_catastale": "B898;",
+   "data_decreto": null,
+   "ente": "polizia locale Casalmaggiore;",
+   "id": 19477,
+   "marca": "Safety21 S.p.A.;",
+   "matricola": "16423;",
+   "modello": "AGUIA Red & Speed;",
+   "n_decreto": "48;",
+   "note": "Dec.sub.tit.n.227_04/07/2025 Via Alessandro Manzoni Dir. Viadana all'altezza del civico 1",
+   "tipo": "fisso",
+   "tipo_raw": "Dispositivo rilevamento velocità istantanea fisso;",
+   "versione": "AGUIA-T5-5-R;"
   }
  ],
- "fetched_at": "2026-10-31T05:00:18Z"
+ "fetched_at": "2026-11-01T05:00:19Z"
 }
