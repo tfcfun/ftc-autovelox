@@ -5026,51 +5026,6 @@
    "versione": "non disponibile"
   },
   {
-   "codice_accertatore": "CMTOP373",
-   "codice_catastale": "M122",
-   "data_decreto": null,
-   "ente": "Comune di Volpiano  Polizia Municipale",
-   "id": 857,
-   "marca": "Traffic Tecnology",
-   "matricola": "IMP.230230613 -TCD.1223033031-TCE.S10A11004554",
-   "modello": "TCS - Traffic Control System",
-   "n_decreto": "378",
-   "note": "",
-   "tipo": "fisso",
-   "tipo_raw": "Misuratore fisso velocità istantanea",
-   "versione": "Non presente nel decreto"
-  },
-  {
-   "codice_accertatore": "CMTOP373",
-   "codice_catastale": "M122",
-   "data_decreto": null,
-   "ente": "Comune di Volpiano  Polizia Municipale",
-   "id": 858,
-   "marca": "Traffic Tecnology",
-   "matricola": "IMP.230230612-TCD.1223033018-TCE.S10A11007368",
-   "modello": "TCS - Traffic Control System",
-   "n_decreto": "378",
-   "note": "",
-   "tipo": "fisso",
-   "tipo_raw": "Misuratore fisso velocità istantanea",
-   "versione": "Non presente nel decreto"
-  },
-  {
-   "codice_accertatore": "CMTOP373",
-   "codice_catastale": "M122",
-   "data_decreto": null,
-   "ente": "Comune di Volpiano  Polizia Municipale",
-   "id": 859,
-   "marca": "Sodi Scientifica",
-   "matricola": "Rilevatore metrologico:948990-CPU:949092",
-   "modello": "Autovelox 106",
-   "n_decreto": "3758",
-   "note": "",
-   "tipo": "sconosciuto",
-   "tipo_raw": "Rilevatore di velocità in modalità istantanea",
-   "versione": "Non presente"
-  },
-  {
    "codice_accertatore": "CMBOP025",
    "codice_catastale": "D847",
    "data_decreto": "2018-01-17",
@@ -62249,7 +62204,52 @@
    "tipo": "sconosciuto",
    "tipo_raw": "Dispositivo rilevamento velocità istantanea",
    "versione": "ND"
+  },
+  {
+   "codice_accertatore": "CMTOP373",
+   "codice_catastale": "M122",
+   "data_decreto": "2026-06-08",
+   "ente": "Comune di Volpiano  Polizia Municipale",
+   "id": 19488,
+   "marca": "Traffic Tecnology",
+   "matricola": "230230613",
+   "modello": "TCS - Traffic Control System",
+   "n_decreto": "125",
+   "note": "",
+   "tipo": "fisso",
+   "tipo_raw": "Misuratore fisso velocità istantanea",
+   "versione": "Non presente nel decreto"
+  },
+  {
+   "codice_accertatore": "CMTOP373",
+   "codice_catastale": "M122",
+   "data_decreto": "2026-06-08",
+   "ente": "Comune di Volpiano  Polizia Municipale",
+   "id": 19489,
+   "marca": "Traffic Tecnology",
+   "matricola": "230230612",
+   "modello": "TCS - Traffic Control System",
+   "n_decreto": "125",
+   "note": "",
+   "tipo": "fisso",
+   "tipo_raw": "Misuratore fisso velocità istantanea",
+   "versione": "Non presente nel decreto"
+  },
+  {
+   "codice_accertatore": "CMTOP373",
+   "codice_catastale": "M122",
+   "data_decreto": "2014-08-06",
+   "ente": "Comune di Volpiano  Polizia Municipale",
+   "id": 19490,
+   "marca": "Sodi Scientifica",
+   "matricola": "Rilevatore metrologico:948990-CPU:949092",
+   "modello": "Autovelox 106",
+   "n_decreto": "3758",
+   "note": "",
+   "tipo": "sconosciuto",
+   "tipo_raw": "Rilevatore di velocità in modalità istantanea",
+   "versione": "Non presente"
   }
  ],
- "fetched_at": "2026-11-04T05:00:18Z"
+ "fetched_at": "2026-11-05T05:00:18Z"
 }
