@@ -42030,21 +42030,6 @@
   "versione": "4244"
  },
  {
-  "codice_accertatore": "CMCEP265",
-  "codice_catastale": "B581",
-  "data_decreto": "2024-04-02",
-  "ente": "POLIZIA MUNICIPALE - CANCELLO ED ARNONE",
-  "id": 17208,
-  "marca": "ENVES",
-  "matricola": "sn ve06.p-1234 - MATR. AL0892K",
-  "modello": "ENVES EVO MVD 1605",
-  "n_decreto": "prot nr 0045070",
-  "note": "MATRICOLA SENSORE 0x0003E679",
-  "tipo": "mobile",
-  "tipo_raw": "VELOX MOBILE",
-  "versione": "enves 06plus"
- },
- {
   "codice_accertatore": "CMFRP217",
   "codice_catastale": "UB195",
   "data_decreto": null,
@@ -62578,5 +62563,20 @@
   "tipo": "sconosciuto",
   "tipo_raw": "Apparato di rilevamento di velocità istantanea",
   "versione": "Velomatic 512D"
+ },
+ {
+  "codice_accertatore": "CMCEP265",
+  "codice_catastale": "B581",
+  "data_decreto": "2026-06-08",
+  "ente": "Polizia Municipale-Cancello ed Arnone",
+  "id": 20324,
+  "marca": "ENGINE SPA",
+  "matricola": "MATRICOLA SENSORE 0x0003E679",
+  "modello": "ENVES EVO MVD 1605",
+  "n_decreto": "125/26",
+  "note": "PRESIDIATO",
+  "tipo": "sconosciuto",
+  "tipo_raw": "APPARATO RILEVAMENTO VELOCITA' ISTANTANEA",
+  "versione": "NON PRESENTE"
  }
 ]
