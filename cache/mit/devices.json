@@ -7951,21 +7951,6 @@
    "versione": "trucam hd"
   },
   {
-   "codice_accertatore": "CMPEP226",
-   "codice_catastale": "B294",
-   "data_decreto": "2025-10-02",
-   "ente": "comune di bussi sul tirino",
-   "id": 1396,
-   "marca": "Safety21 S.p.A.",
-   "matricola": "317",
-   "modello": "Velocar Red&Speed EVO-R",
-   "n_decreto": "342",
-   "note": "Dec.App.n.4708_01/08/2016 Dec.sub.tit.n.227_04/07/2025 S.S. 153 3+780 Pescara - L'Aquila",
-   "tipo": "fisso",
-   "tipo_raw": "Dispositivo rilevamento velocità istantanea fisso",
-   "versione": "ND"
-  },
-  {
    "codice_accertatore": "CMBSP229",
    "codice_catastale": "B698",
    "data_decreto": null,
@@ -32864,21 +32849,6 @@
    "tipo": "media",
    "tipo_raw": "REVELAZIONE VELOCITA' MEDIA A POSTAZIONE FISSA",
    "versione": "NA"
-  },
-  {
-   "codice_accertatore": "CMVAP225",
-   "codice_catastale": "C911",
-   "data_decreto": "2005-05-16",
-   "ente": "COMUNE DI COMABBIO POLIZIA LOCALE",
-   "id": 9909,
-   "marca": "SODI SCIENTIFICA S.PA",
-   "matricola": "RILEVATORE 929449 ELABORATORE ANALIZZATORE 910180",
-   "modello": "AUTOVELOX RILEVATORE DI VELOCITA'",
-   "n_decreto": "PROTOCOLLO 1122",
-   "note": "",
-   "tipo": "sconosciuto",
-   "tipo_raw": "AUTOVELOX 105 SE",
-   "versione": "105SE"
   },
   {
    "codice_accertatore": "CMBNP220",
@@ -62579,7 +62549,52 @@
    "tipo": "mobile",
    "tipo_raw": "Rilevatore di velocita istantanea mobile manuale",
    "versione": "Non presente"
+  },
+  {
+   "codice_accertatore": "CMPEP226",
+   "codice_catastale": "B294",
+   "data_decreto": "2025-10-02",
+   "ente": "Polizia Locale - Comune di Bussi sul Tirino",
+   "id": 20331,
+   "marca": "Safety21 S.p.A.",
+   "matricola": "317",
+   "modello": "Velocar Red&Speed EVO-R",
+   "n_decreto": "342",
+   "note": "Rimosso il 21/10/2026 Dec.App. n. 4708_01/08/2016 Dec. Sub.tit.n.227_04/07/2025 S.S. 153 km 3+780 Pescara-L'Aquila",
+   "tipo": "fisso",
+   "tipo_raw": "Dispositivo rilevamento velocità istantanea fisso",
+   "versione": "ND"
+  },
+  {
+   "codice_accertatore": "CMPEP226",
+   "codice_catastale": "B294",
+   "data_decreto": "2025-10-02",
+   "ente": "Polizia Locale - Comune di Bussi sul Tirino",
+   "id": 20332,
+   "marca": "Safety21 S.p.A.",
+   "matricola": "673",
+   "modello": "VRS-EVO-R",
+   "n_decreto": "342",
+   "note": "Dec.App.n.4708_01/08/2016 Dec. Est. n.129_07/04/2021 Dec.Sub.tit.n.227_04/07/2025 S.S. 153 km 3+780 Dir.Pescara",
+   "tipo": "fisso",
+   "tipo_raw": "Dispositivo rilevamento velocità istantanea fisso",
+   "versione": "VRS-EVO-T12-5-R"
+  },
+  {
+   "codice_accertatore": "CMVAP225",
+   "codice_catastale": "C911",
+   "data_decreto": "2026-07-12",
+   "ente": "COMUNE DI COMABBIO POLIZIA LOCALE",
+   "id": 20333,
+   "marca": "ENVES",
+   "matricola": "0x0002EB0D",
+   "modello": "EVO MVD 1605",
+   "n_decreto": "125/2026",
+   "note": "NESSUNA NOTA",
+   "tipo": "sconosciuto",
+   "tipo_raw": "AUTOVELOX",
+   "versione": "ENVES EVO MVD 1605"
   }
  ],
- "fetched_at": "2026-11-19T05:00:20Z"
+ "fetched_at": "2026-11-20T05:00:19Z"
 }
