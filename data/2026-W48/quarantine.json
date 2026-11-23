@@ -1,0 +1,14 @@
+[
+ {
+  "raw": "Interno     FRANCIA",
+  "reason": "kilometre column contains free text 'Interno'",
+  "region": "Piemonte",
+  "source": "fixed:autostrada"
+ },
+ {
+  "raw": "Traforo del Frejus     galleria",
+  "reason": "kilometre column contains free text 'galleria'",
+  "region": "Piemonte",
+  "source": "fixed:autostrada"
+ }
+]
